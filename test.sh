@@ -5,6 +5,6 @@ echo "### test.sh starting ###"
 
 source ./.pyflowsom-venv/bin/activate
 
-python ./pyflowsom_test.py
+python -m pytest --randomly-seed=42 --randomly-dont-reorganize --cov=pyFlowSOM --pycodestyle pyFlowSOM
 
 echo "### test.sh finished ###"

@@ -1,11 +1,3 @@
 [build-system]
-requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
-
-[project]
-name = "pyflowsom"
-version = "0.1"
-description = "Python wrapper for the FlowSOM algorithm."
-dependencies = [
-    "numpy == 1.23.*",
-    ]
+requires = ["setuptools", "numpy>=1.20.0,<1.22", "Cython>=0.29.24,<1"]
