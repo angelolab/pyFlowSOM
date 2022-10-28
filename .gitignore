@@ -4,4 +4,11 @@
 *-venv
 dist
 build
+**/*cache*
 *.egg-info
+
+**/.coverage*
+
+**/.DS_Store
+
+**/.token.json
