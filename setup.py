@@ -1,4 +1,5 @@
-from distutils.core import setup, Extension
+from setuptools import Extension, setup
+
 
 pyflowsom_module = Extension('pyflowsom',
                     sources = ['pyflowsom.c'])
