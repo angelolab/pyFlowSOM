@@ -1,7 +1,2 @@
-# NOTE, a new release needs to be made every time a package gets updated.
 Cython>=0.29.24,<1
 numpy>=1.21.6,<2
-pandas>=1.3.5,<2
-scikit-image>=0.19.3,<0.20
-scipy>=1.7.3,<2
-xarray>=2022.6.0,<2023
