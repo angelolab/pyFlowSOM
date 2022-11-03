@@ -10,7 +10,7 @@ python:
 
 install:
   - travis_retry pip install --upgrade pip setuptools wheel
-  - travis_retry pip install .[tests]
+  - travis_retry pip install -r requirements.txt -r requirements-test.txt
 
 env:
   - MPLBACKEND=Agg
