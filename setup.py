@@ -1,5 +1,6 @@
 from os import path, pardir
-from setuptools import Extension, setup, find_packages
+from setuptools import Extension, setup
+from Cython.Build import cythonize
 
 VERSION = '0.1.0'
 
@@ -13,17 +14,11 @@ def read_reqs(filename):
 with open(path.join(PKG_FOLDER, 'README.md')) as f:
     long_description = f.read()
 
-pyflowsom_module = Extension('pyflowsom',
-    sources = [
-        'pyFlowSOM/pyflowsom.c',
-        ]
-    )
-
 setup(
     name='pyFlowSOM',
     version=VERSION,
-    packages=find_packages(),
-    ext_modules = [pyflowsom_module],
+    packages=['pyFlowSOM'],
+    ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx'),
     license='Modified Apache License 2.0',
     description='A Python implementation of the SOM training functionality of FlowSOM',
     author='Angelo Lab',

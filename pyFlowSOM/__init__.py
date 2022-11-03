@@ -1,1 +1,1 @@
-from pyflowsom import greet
+from .cyFlowSOM import c_plus_seven
