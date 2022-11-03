@@ -18,6 +18,7 @@ env:
 cache: pip
 
 script:
+  - pip install .
   - python -m pytest --randomly-seed=42 --randomly-dont-reorganize --cov=pyFlowSOM --pycodestyle pyFlowSOM
 
 after_failure:
