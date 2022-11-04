@@ -1,7 +1,9 @@
 # Example script to run FlowSOM in R
 
 # Download FlowSOM from github (if need be, install devtools with install.packages("devtools"))
-devtools::install_github("SofieVG/FlowSOM", build_vignettes=FALSE)
+devtools::install_version('igraph', version='1.3.2', repos='https://cran.rstudio.org/')
+devtools::install_github("y2kbugger/FlowSOM", build_vignettes=FALSE)
+
 
 # Load FlowSOM package
 library(FlowSOM)
@@ -33,7 +35,6 @@ mapping_out = FlowSOM:::MapDataToCodes(as.matrix(read_in_nodes), as.matrix(dat))
 clusters = mapping_out[,1]
 dat$cluster = clusters
 write.csv(dat, "example_clusters_output_script.csv", row.names=FALSE)
-
 
 
 ## Make heatmap of outputs to assess clustering
