@@ -1,4 +1,10 @@
-void c_square_each(double arr[], unsigned int n)
+#include <stdlib.h>
+#include <stdio.h>
+#include <float.h>
+#include <math.h>
+
+
+void C_square_each(double arr[], unsigned int n)
 {
     for (unsigned int i = 0; i < n; i++)
     {
@@ -9,22 +15,9 @@ void c_square_each(double arr[], unsigned int n)
         }
     }
 }
-/* som.c
-    Based on code of Ron Wehrens
-*/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-
-#include <R.h>
-#include <Rmath.h>
-#include <R_ext/PrtUtil.h>
-#include <R_ext/Rdynload.h>
-
-#define RANDIN  GetRNGstate()
-#define RANDOUT PutRNGstate()
-#define UNIF unif_rand()
+#define RANDIN  srand(42)
+#define UNIF rand() / RAND_MAX
 
 #define EPS 1e-4                /* relative test of equality of distances */
 
@@ -74,14 +67,19 @@ double cosine(double * p1, double * p2, int px, int n, int ncodes){
     return (-nom/(sqrt(denom1)*sqrt(denom2)))+1;
 }
 
-void C_SOM(double *data,
-            double *codes,
-            double *nhbrdist,
-            double *alphas, double *radii,
-            double *xdists, /* working arrays */
-            Sint *pn, Sint *ppx,
-            Sint *pncodes, Sint *prlen,
-            Sint *dist)
+void C_SOM(
+    double *data,
+    double *codes,
+    double *nhbrdist,
+    double *alphas,
+    double *radii,
+    double *xdists, /* working arrays */
+    int *pn,
+    int *ppx,
+    int *pncodes,
+    int *prlen,
+    int *dist
+    )
 {
     int n = *pn, px = *ppx, ncodes = *pncodes, rlen = *prlen;
     int cd, i, j, k, nearest, niter;
@@ -109,8 +107,6 @@ void C_SOM(double *data,
 
 
     for (k = 0; k < niter; k++) {
-
-        if (k % 1024 == 0) R_CheckUserInterrupt();
 
         if(k%n == 0){
             if(change < 1){
@@ -152,13 +148,19 @@ void C_SOM(double *data,
         threshold -= thresholdStep;
     }
 
-    RANDOUT;
 }
 
-void C_mapDataToCodes(double *data, double *codes,
-        int *pncodes, int *pnd, int *pp,
-        int *nnCodes, double *nnDists,
-        int *dist){
+void C_mapDataToCodes(
+    double *data,
+    double *codes,
+    int *pncodes,
+    int *pnd,
+    int *pp,
+    int *nnCodes,
+    double *nnDists,
+    int *dist
+    )
+{
     int ncodes = *pncodes, nd = *pnd, p = *pp;
     int i, cd, counter, minid;
     double tmp, mindist;
@@ -181,12 +183,11 @@ void C_mapDataToCodes(double *data, double *codes,
     and ncodes is the number of SOM units*/
     counter = -1;
     for (i = 0; i < nd; i++) {
-        if (i % 1024 == 0) R_CheckUserInterrupt();
         minid = -1;
         mindist = DBL_MAX;
         for (cd = 0; cd < ncodes; cd++) {
             tmp = distf(&data[i], &codes[cd], p, nd, ncodes);
-            //Rprintf("\ndist: %f",tmp2);
+            // printf("\ndist: %f",tmp2);
             if(tmp < mindist){
                 mindist = tmp;
                 minid = cd;
@@ -196,47 +197,3 @@ void C_mapDataToCodes(double *data, double *codes,
         nnDists[counter] = mindist;
     }
 }
-
-
-static const R_CMethodDef cMethods[] = {
-    {"C_SOM", (DL_FUNC) &C_SOM, 11},
-    {"C_mapDataToCodes", (DL_FUNC) &C_mapDataToCodes, 8},
-    {NULL, NULL, 0}
-};
-
-void R_init_FlowSOM(DllInfo *info)
-{
-    R_registerRoutines(info, cMethods, NULL, NULL, NULL);
-    R_useDynamicSymbols(info, TRUE);
-}
-
-
-
-/* TODO Initialisation
-void initialisation(double *data, double *codes,
-        int *pncodes, int *pnd, Sint *pp,
-        int *nnCodes, double *nnDists)
-{
-    int ncodes = *pncodes, nd = *pnd, p = *pp;
-    int i, j, cd, counter,minid;
-    double tmp, mindist, tmp2;
-
-    counter = -1;
-    for (i = 0; i < nd; i++) {
-        minid = -1;
-        mindist = DBL_MAX;
-        for (cd = 0; cd < ncodes; cd++) {
-            tmp2 = 0;
-            for (j = 0; j < p; j++) {
-                tmp = data[i + j*nd] - codes[cd + j*ncodes];
-                tmp2 += tmp * tmp;
-            }
-            if(tmp2 < mindist){
-                mindist = tmp2;
-                minid = cd;
-            }
-        }
-        nnCodes[++counter] = minid+1;
-        nnDists[counter] = mindist;
-    }
-} */
