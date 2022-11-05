@@ -55,5 +55,27 @@ def som(
     ):
     pass
 
-def map_data_to_codes(data, codes, distf = 2):
+def map_data_to_codes(codes, newdata, distf=2):
+    """Assign nearest node to each datapoint
+
+    Parameters:
+        codes: matrix with nodes of the SOM
+        newdata: matrix with datapoints to assign
+        distf: Distance function (1 = manhattan, 2 = euclidean, 3 = chebyshev, 4 = cosine)
+
+    Returns:
+        Array with nearest node id for each datapoint
+
+    """
     pass
+#     nnCodes C_mapDataToCodes(
+#         as.double(newdata[, colnames(codes)]),
+#         as.double(codes),
+#         as.integer(nrow(codes)),
+#         as.integer(nrow(newdata)),
+#         as.integer(ncol(codes)),
+#         nnCodes = integer(nrow(newdata)),
+#         nnDists = double(nrow(newdata)),
+#         distf = distf
+#         )
+#   return(cbind(nnCodes$nnCodes, nnCodes$nnDists))

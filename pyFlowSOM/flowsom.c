@@ -158,7 +158,7 @@ void C_mapDataToCodes(
     int *pp,
     int *nnCodes,
     double *nnDists,
-    int *dist
+    int dist
     )
 {
     int ncodes = *pncodes, nd = *pnd, p = *pp;
@@ -166,13 +166,13 @@ void C_mapDataToCodes(
     double tmp, mindist;
     double (*distf)(double*,double*,int,int,int);
 
-    if(*dist == 1){
+    if(dist == 1){
         distf = &manh;
-    } else if (*dist == 2){
+    } else if (dist == 2){
         distf = &eucl;
-    } else if (*dist == 3){
+    } else if (dist == 3){
         distf = &chebyshev;
-    } else if (*dist == 4){
+    } else if (dist == 4){
         distf = &cosine;
     } else {
         distf = &eucl;
