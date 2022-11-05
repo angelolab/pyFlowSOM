@@ -16,12 +16,12 @@ cdef extern from "flowsom.c":
     void C_mapDataToCodes(
         double *data,
         double *codes,
-        int *pncodes,
-        int *pnd,
-        int *pp,
+        int pncodes,
+        int pnd,
+        int pp,
         int *nnCodes,
         double *nnDists,
-        int *dist
+        int dist
         )
 
 import numpy as np
@@ -67,15 +67,34 @@ def map_data_to_codes(codes, newdata, distf=2):
         Array with nearest node id for each datapoint
 
     """
-    pass
-#     nnCodes C_mapDataToCodes(
-#         as.double(newdata[, colnames(codes)]),
-#         as.double(codes),
-#         as.integer(nrow(codes)),
-#         as.integer(nrow(newdata)),
-#         as.integer(ncol(codes)),
-#         nnCodes = integer(nrow(newdata)),
-#         nnDists = double(nrow(newdata)),
-#         distf = distf
-#         )
-#   return(cbind(nnCodes$nnCodes, nnCodes$nnDists))
+
+    if not codes.flags['F_CONTIGUOUS']:
+        codes = np.ascontiguousarray(codes)
+    cdef double[::1,:] codes_mv = codes
+
+    if not newdata.flags['F_CONTIGUOUS']:
+        newdata = np.ascontiguousarray(newdata)
+    cdef double[::1,:] newdata_mv = newdata
+
+    cdef Py_ssize_t codes_rows = codes.shape[0]
+    cdef Py_ssize_t codes_cols = codes.shape[1]
+    cdef Py_ssize_t newdata_rows = newdata.shape[0]
+    cdef Py_ssize_t newdata_cols = newdata.shape[1]
+
+    nnCodes = np.arange(newdata_rows, dtype=np.dtype("i"))
+    nnDists = np.arange(newdata_rows, dtype=np.float64)
+    cdef int [:] nnCodes_mv = nnCodes
+    cdef double [:] nnDists_mv = nnDists
+
+    C_mapDataToCodes(
+        &newdata_mv[0, 0],
+        &codes_mv[0, 0],
+        codes_rows,
+        newdata_rows,
+        codes_cols,
+        &nnCodes_mv[0],
+        &nnDists_mv[0],
+        distf
+        )
+
+    return (nnCodes, nnDists)

@@ -153,15 +153,14 @@ void C_SOM(
 void C_mapDataToCodes(
     double *data,
     double *codes,
-    int *pncodes,
-    int *pnd,
-    int *pp,
+    int ncodes,
+    int nd,
+    int p,
     int *nnCodes,
     double *nnDists,
     int dist
     )
 {
-    int ncodes = *pncodes, nd = *pnd, p = *pp;
     int i, cd, counter, minid;
     double tmp, mindist;
     double (*distf)(double*,double*,int,int,int);
@@ -187,7 +186,6 @@ void C_mapDataToCodes(
         mindist = DBL_MAX;
         for (cd = 0; cd < ncodes; cd++) {
             tmp = distf(&data[i], &codes[cd], p, nd, ncodes);
-            // printf("\ndist: %f",tmp2);
             if(tmp < mindist){
                 mindist = tmp;
                 minid = cd;

@@ -31,6 +31,17 @@ def example_node_output():
     return arr
 
 
+@pytest.fixture(scope='session')
+def example_cluster_groundtruth():
+    """Each row is a cluster, each column is a marker
+    """
+    df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_clusters_output.csv')
+    arr = df['cluster'].to_numpy()
+    assert arr.shape == (41646,)
+    assert arr.dtype == np.int
+    return arr
+
+
 def test_square_each_nonsquare_raises():
     mat = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float64)
 
@@ -55,5 +66,8 @@ def test_som(example_som_input):
     som_out = som(example_som_input, xdim=10, ydim=10, rlen=10)
 
 
-def test_map_data_to_codes(example_som_input, example_node_output):
-    mapping_out = map_data_to_codes(example_node_output, example_som_input)
+def test_map_data_to_codes(example_som_input, example_node_output, example_cluster_groundtruth):
+    codes, dists = map_data_to_codes(example_node_output, example_som_input)
+    assert codes.shape == (41646,)
+    assert dists.shape == (41646,)
+    assert np.array_equal(example_cluster_groundtruth, codes)
