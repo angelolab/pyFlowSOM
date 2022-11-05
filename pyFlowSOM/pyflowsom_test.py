@@ -10,12 +10,20 @@ THIS_DIR = Path(__file__).parent
 
 @pytest.fixture(scope='session')
 def example_som_input():
-    return pd.read_csv(THIS_DIR.parent / 'examples' / 'example_som_input.csv')
+    df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_som_input.csv')
+    arr = df.to_numpy()
+    assert arr.shape == (41646, 16)
+    assert arr.dtype == np.float64
+    return arr
 
 
 @pytest.fixture(scope='session')
 def example_node_output():
-    return pd.read_csv(THIS_DIR.parent / 'examples' / 'example_node_output.csv')
+    df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_node_output.csv')
+    arr = df.to_numpy()
+    assert arr.shape == (100, 16)
+    assert arr.dtype == np.float64
+    return arr
 
 
 def test_square_each_nonsquare_raises():
