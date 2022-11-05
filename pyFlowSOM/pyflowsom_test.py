@@ -10,6 +10,9 @@ THIS_DIR = Path(__file__).parent
 
 @pytest.fixture(scope='session')
 def example_som_input():
+    """Each row is a pixel, each column is a marker
+    original image could be: 66 x 631 = 41,646
+    """
     df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_som_input.csv')
     arr = df.to_numpy()
     assert arr.shape == (41646, 16)
@@ -19,6 +22,8 @@ def example_som_input():
 
 @pytest.fixture(scope='session')
 def example_node_output():
+    """Each row is a cluster, each column is a marker
+    """
     df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_node_output.csv')
     arr = df.to_numpy()
     assert arr.shape == (100, 16)
