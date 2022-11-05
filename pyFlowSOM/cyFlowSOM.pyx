@@ -47,8 +47,6 @@ def som(
     mst = 1,
     alpha = [0.05, 0.01],
     radius = lambda dist: [np.percentile(dist, 0.67), 0],
-    init = False,
-    initf = None,
     distf = 2,
     silent = False,
     map = False,

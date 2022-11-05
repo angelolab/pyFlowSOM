@@ -36,8 +36,6 @@ SOM <- function (
     mst = 1,
     alpha = c(0.05, 0.01),
     radius = stats::quantile(nhbrdist, 0.67) * c(1, 0),
-    init = FALSE,
-    initf = Initialize_KWSP,
     distf = 2,
     silent = FALSE,
     map = TRUE,
@@ -64,12 +62,7 @@ SOM <- function (
     grid <- expand.grid(seq_len(xdim), seq_len(ydim))
     nCodes <- nrow(grid)
     if(is.null(codes)){
-        if(init){
-            codes <- initf(data, xdim, ydim)
-            message("Initialization ready\n")
-        } else {
-            codes <- data[sample(1:nrow(data), nCodes, replace = FALSE), , drop = FALSE]
-        }
+        codes <- data[sample(1:nrow(data), nCodes, replace = FALSE), , drop = FALSE]
     }
 
     # Initialize the neighborhood
