@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 import numpy as np
 
-from . import square_each, som, map_data_to_codes
+from . import som, map_data_to_codes
 
 THIS_DIR = Path(__file__).parent
 
@@ -40,26 +40,6 @@ def example_cluster_groundtruth():
     assert arr.shape == (41646,)
     assert arr.dtype == np.int
     return arr
-
-
-def test_square_each_nonsquare_raises():
-    mat = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float64)
-
-    with pytest.raises(ValueError):
-        square_each(mat)
-
-
-def test_square_each_noncontiguous_raises():
-    mat = np.array([[1, 2, 3, 4], [5, 6, 7, 8]], dtype=np.float64)
-
-    with pytest.raises(ValueError):
-        square_each(mat[:, ::2])
-
-
-def test_square_each():
-    mat = np.array([[1, 2], [4, 5]], dtype=np.float64)
-
-    assert np.array_equal(np.array([[1, 4], [16, 25]], dtype=np.float64), square_each(mat))
 
 
 def test_som(example_som_input):

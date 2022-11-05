@@ -1,5 +1,4 @@
 cdef extern from "flowsom.c":
-    void C_square_each(double *, unsigned int)
     void C_SOM(
         double *data,
         double *codes,
@@ -25,19 +24,6 @@ cdef extern from "flowsom.c":
         )
 
 import numpy as np
-
-def square_each(np_mat):
-    if not np_mat.flags['C_CONTIGUOUS']:
-        raise ValueError("Array must be C contiguous")
-
-    cdef double[:,::1] mat = np_mat
-
-    if not mat.shape[0] == mat.shape[1]:
-        raise ValueError("Matrix must be square")
-
-    C_square_each(&mat[0, 0], mat.shape[0])
-
-    return mat
 
 def som(
     data,
