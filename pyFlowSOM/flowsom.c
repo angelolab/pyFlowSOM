@@ -134,7 +134,6 @@ void C_SOM(
 
         threshold -= thresholdStep;
     }
-
 }
 
 void C_mapDataToCodes(
@@ -167,7 +166,6 @@ void C_mapDataToCodes(
     /* i is a counter over objects in data, cd  is a counter over SOM
     units, p is the number of columns, nd is the number of datapoints
     and ncodes is the number of SOM units*/
-    counter = -1;
     for (i = 0; i < nd; i++) {
         minid = -1;
         mindist = DBL_MAX;
@@ -178,7 +176,7 @@ void C_mapDataToCodes(
                 minid = cd;
             }
         }
-        nnCodes[++counter] = minid+1;
-        nnDists[counter] = mindist;
+        nnCodes[i] = minid+1;
+        nnDists[i] = mindist;
     }
 }
