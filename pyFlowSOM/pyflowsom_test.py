@@ -51,3 +51,14 @@ def test_map_data_to_codes(example_som_input, example_node_output, example_clust
     assert codes.shape == (41646,)
     assert dists.shape == (41646,)
     assert np.array_equal(example_cluster_groundtruth, codes)
+
+
+def test_map_data_to_codes_handles_c_continuous_arrays(
+        example_som_input,
+        example_node_output,
+        example_cluster_groundtruth):
+
+    codes, dists = map_data_to_codes(example_node_output, np.ascontiguousarray(example_som_input))
+    assert codes.shape == (41646,)
+    assert dists.shape == (41646,)
+    assert np.array_equal(example_cluster_groundtruth, codes)

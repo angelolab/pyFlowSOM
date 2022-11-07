@@ -55,11 +55,11 @@ def map_data_to_codes(codes, newdata, distf=2):
     """
 
     if not codes.flags['F_CONTIGUOUS']:
-        codes = np.ascontiguousarray(codes)
+        codes = np.asfortranarray(codes)
     cdef double[::1,:] codes_mv = codes
 
     if not newdata.flags['F_CONTIGUOUS']:
-        newdata = np.ascontiguousarray(newdata)
+        newdata = np.asfortranarray(newdata)
     cdef double[::1,:] newdata_mv = newdata
 
     cdef Py_ssize_t codes_rows = codes.shape[0]
