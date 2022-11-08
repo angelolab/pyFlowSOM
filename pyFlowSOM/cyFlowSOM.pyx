@@ -31,7 +31,7 @@ def som(
     ydim = 10,
     rlen = 10,
     mst = 1,
-    alpha = [0.05, 0.01],
+    alpha = (0.05, 0.01),
     radius = lambda dist: [np.percentile(dist, 0.67), 0],
     distf = 2,
     silent = False,
@@ -39,18 +39,78 @@ def som(
     codes = None,
     importance = None,
     ):
+    """
+    Build a self-organizing map
+
+    Parameters
+    ----------
+    data : np.Typing.NDArray[np.float64]
+        2D array containing the training observations
+        shape: (observation_count, parameter_count)
+    xdim : int
+        Width of the grid
+    ydim : int
+        Height of the grid
+    rlen : int
+        Number of times to loop over the training data for each MST
+    mst : int
+        Number of times to build an MST
+    alpha : Tuple[float, float]
+        Start and end learning rate
+    radius : Tuple[float, float]
+        Start and end radius
+    distf: int
+        Distance function to use.
+        1 = manhattan
+        2 = euclidean
+        3 = chebyshev
+        4 = cosine
+    silent : bool
+        Suppress debug print statements
+    map : bool
+        Map the data to the codes
+    codes : np.Typing.NDArray[np.float64]
+        Cluster centers to start with.
+        shape = (xdim * ydim, parameter_count)
+    importance : np.Typing.NDArray[np.float64]
+        Scale parameters columns of input data an importance weight
+        shape = (parameter_count,)
+
+    Returns
+    -------
+    np.Typing.NDArray[]
+    """
     pass
 
 def map_data_to_codes(codes, newdata, distf=2):
-    """Assign nearest node to each datapoint
+    """Assign nearest node to each obersevation in newdata
 
-    Parameters:
-        codes: matrix with nodes of the SOM
-        newdata: matrix with datapoints to assign
-        distf: Distance function (1 = manhattan, 2 = euclidean, 3 = chebyshev, 4 = cosine)
+    Both codes and newdata must represent the same parameters, in the same order.
 
-    Returns:
-        Array with nearest node id for each datapoint
+    Parameters
+    ----------
+    codes : np.typing.NDArray[np.float64]
+        Nodes of the SOM.
+        shape = (node_count, parameter_count)
+        Fortan contiguous preffered
+    newdata: np.typing.NDArray[np.float64]
+        New observations to assign nodes.
+        shape = (observation_count, parameter_count)
+        Fortan contiguous preffered
+    distf: int
+        Distance function to use.
+        1 = manhattan
+        2 = euclidean
+        3 = chebyshev
+        4 = cosine
+
+    Returns
+    -------
+    (np.typing.NDArray[np.int32], np.typing.NDArray[np.float64])
+        The first array contains the node index assigned to each observation.
+            shape = (observation_count,)
+        The second array contains the distance to the node for each observation.
+            shape = (observation_count,)
 
     """
 
