@@ -31,8 +31,8 @@ def som(
     ydim = 10,
     rlen = 10,
     mst = 1,
-    alpha = (0.05, 0.01),
-    radius = lambda dist: [np.percentile(dist, 0.67), 0],
+    alpha_range = (0.05, 0.01),
+    radius_range = None,
     distf = 2,
     silent = False,
     map = False,
@@ -55,10 +55,11 @@ def som(
         Number of times to loop over the training data for each MST
     mst : int
         Number of times to build an MST
-    alpha : Tuple[float, float]
+    alpha_range : Tuple[float, float]
         Start and end learning rate
-    radius : Tuple[float, float]
-        Start and end radius
+    radius_range : Tuple[float, float]
+        Start and end radius. If None, radius is set to a reasonable value
+        value based on the grid size i.e. xdim and ydim
     distf: int
         Distance function to use.
         1 = manhattan
@@ -72,6 +73,7 @@ def som(
     codes : np.Typing.NDArray[np.float64]
         Cluster centers to start with.
         shape = (xdim * ydim, parameter_count)
+        If None, codes are initialized by randomly selecting observations
     importance : np.Typing.NDArray[np.float64]
         Scale parameters columns of input data an importance weight
         shape = (parameter_count,)
@@ -80,7 +82,11 @@ def som(
     -------
     np.Typing.NDArray[]
     """
-    pass
+
+    nhbrdist = [0,1,2,3,4,5,6,7,8,9] # fixme, replace with real, non-testdummy
+
+    if radius_range is None:
+        radius_range = (np.percentile(nhbrdist, 0.67), 0)
 
 def map_data_to_codes(codes, newdata, distf=2):
     """Assign nearest node to each obersevation in newdata
