@@ -18,7 +18,7 @@ setup(
     name='pyFlowSOM',
     version=VERSION,
     packages=['pyFlowSOM'],
-    ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx'),
+    ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
     license='Modified Apache License 2.0',
     description='A Python implementation of the SOM training functionality of FlowSOM',
     author='Angelo Lab',
