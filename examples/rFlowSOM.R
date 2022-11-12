@@ -43,6 +43,7 @@ SOM <- function (
     importance = NULL
     )
 {
+    # feel like there needs to way more input checking than just this
     if (!is.null(codes)){
         if((ncol(codes) != ncol(data)) | (nrow(codes) != xdim * ydim)){
             stop("If codes is not NULL, it should have the same number of
@@ -52,14 +53,37 @@ SOM <- function (
     }
 
     if(!is.null(importance)){
+        # straightforward way to scale the data
         data <- data * rep(importance, each = nrow(data))
     }
 
     if (is.null(colnames(data))) {
+        # this will be handleed by pandas wrapper
         colnames(data) <- as.character(seq_len(ncol(data)))
     }
+
     # Initialize the grid
     grid <- expand.grid(seq_len(xdim), seq_len(ydim))
+    # Basically the grid is a list of all coordinates in neighborhood
+    # [1] "grid"
+    #     Var1 Var2
+    # 1      1    1
+    # 2      2    1
+    # 3      3    1
+    # 4      4    1
+    # 5      5    1
+    # 6      6    1
+    # 7      7    1
+    # 8      8    1
+    # 9      9    1
+    # 10    10    1
+    # 11     1    2
+    # 12     2    2
+    # 13     3    2
+    # 14     4    2
+
+
+    #if we don't supply codes, we randomly sample them from the data
     nCodes <- nrow(grid)
     if(is.null(codes)){
         codes <- data[sample(1:nrow(data), nCodes, replace = FALSE), , drop = FALSE]
@@ -67,6 +91,21 @@ SOM <- function (
 
     # Initialize the neighborhood
     nhbrdist <- as.matrix(stats::dist(grid, method = "maximum"))
+    # [1] "double"
+    # [1] 100 100
+    #     1 2 3 4 5 6 7 8 9 10 ...
+    # 1   0 1 2 3 4 5 6 7 8  9
+    # 2   1 0 1 2 3 4 5 6 7  8
+    # 3   2 1 0 1 2 3 4 5 6  7
+    # 4   3 2 1 0 1 2 3 4 5  6
+    # 5   4 3 2 1 0 1 2 3 4  5
+    # 6   5 4 3 2 1 0 1 2 3  4
+    # 7   6 5 4 3 2 1 0 1 2  3
+    # 8   7 6 5 4 3 2 1 0 1  2
+    # 9   8 7 6 5 4 3 2 1 0  1
+    # 10  9 8 7 6 5 4 3 2 1  0
+    # ........... .  .  .  .  .
+
 
     # Initialize the radius
     if(mst == 1){
@@ -81,6 +120,36 @@ SOM <- function (
 
     # Compute the SOM
     for(i in seq_len(mst)){
+        # [1] "# starting mst iteration ########"
+        # mst: [1] 3
+        # alpha: [1] 0.05000000 0.03666667
+        # radius: [1] 6 4
+        # xdistsv: [1] 100
+        # n: [1] 41646
+        # px: [1] 16
+        # ncodes: [1] 100
+        # rlen: [1] 10
+        # distf: [1] 2
+        # [1] "# starting mst iteration ########"
+        # mst: [1] 3
+        # alpha: [1] 0.03666667 0.02333333
+        # radius: [1] 4 2
+        # xdistsv: [1] 100
+        # n: [1] 41646
+        # px: [1] 16
+        # ncodes: [1] 100
+        # rlen: [1] 10
+        # distf: [1] 2
+        # [1] "# starting mst iteration ########"
+        # mst: [1] 3
+        # alpha: [1] 0.02333333 0.01000000
+        # radius: [1] 2 0
+        # xdistsv: [1] 100
+        # n: [1] 41646
+        # px: [1] 16
+        # ncodes: [1] 100
+        # rlen: [1] 10
+        # distf: [1] 2
         res <- .C("C_SOM",
             data = as.double(data),
             codes = as.double(codes),
