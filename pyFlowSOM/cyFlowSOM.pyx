@@ -120,13 +120,12 @@ def map_data_to_codes(codes, newdata, distf=2):
     if not codes.flags['F_CONTIGUOUS']:
         codes = np.asfortranarray(codes)
     cdef double[::1,:] codes_mv = codes
+    cdef Py_ssize_t codes_rows = codes.shape[0]
+    cdef Py_ssize_t codes_cols = codes.shape[1]
 
     if not newdata.flags['F_CONTIGUOUS']:
         newdata = np.asfortranarray(newdata)
     cdef double[::1,:] newdata_mv = newdata
-
-    cdef Py_ssize_t codes_rows = codes.shape[0]
-    cdef Py_ssize_t codes_cols = codes.shape[1]
     cdef Py_ssize_t newdata_rows = newdata.shape[0]
     cdef Py_ssize_t newdata_cols = newdata.shape[1]
 
