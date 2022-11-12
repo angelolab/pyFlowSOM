@@ -13,7 +13,6 @@
 #' @param distf Distance function (1 = manhattan, 2 = euclidean, 3 = chebyshev,
 #'              4 = cosine)
 #' @param silent If FALSE, print status updates
-#' @param map If FALSE, data is not mapped to the SOM. Default TRUE.
 #' @param codes Cluster centers to start with
 #' @param importance array with numeric values. Parameters will be scaled
 #'                   according to importance
@@ -38,7 +37,6 @@ SOM <- function (
     radius = stats::quantile(nhbrdist, 0.67) * c(1, 0),
     distf = 2,
     silent = FALSE,
-    map = TRUE,
     codes = NULL,
     importance = NULL
     )
@@ -171,12 +169,6 @@ SOM <- function (
 
     if(!silent) message("Mapping data to SOM\n")
 
-    if (map) {
-        mapping <- MapDataToCodes(codes, data)
-    } else {
-        mapping <- NULL
-    }
-
     return(
         list(
             xdim = xdim,
@@ -189,7 +181,6 @@ SOM <- function (
             distf = distf,
             grid = grid,
             codes = codes,
-            mapping = mapping,
             nNodes = nCodes
           )
     )

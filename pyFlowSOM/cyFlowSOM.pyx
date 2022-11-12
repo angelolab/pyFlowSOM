@@ -35,7 +35,6 @@ def som(
     radius_range = None,
     distf = 2,
     silent = False,
-    map = False,
     codes = None,
     importance = None,
     ):
@@ -68,8 +67,6 @@ def som(
         4 = cosine
     silent : bool
         Suppress debug print statements
-    map : bool
-        Map the data to the codes
     codes : np.Typing.NDArray[np.float64]
         Cluster centers to start with.
         shape = (xdim * ydim, parameter_count)
