@@ -11,6 +11,6 @@ fi
 
 source ./.pyflowsom-venv/bin/activate
 
-python setup.py develop
+pip install -ve .
 
 echo "### build.sh finished ###"
