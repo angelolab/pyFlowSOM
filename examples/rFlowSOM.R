@@ -167,8 +167,6 @@ SOM <- function (
         nhbrdist <- Dist.MST(codes)
     }
 
-    if(!silent) message("Mapping data to SOM\n")
-
     return(
         list(
             xdim = xdim,
