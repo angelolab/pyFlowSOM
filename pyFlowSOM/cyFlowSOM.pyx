@@ -99,10 +99,11 @@ def som(
     nhbrdist = neighborhood_distance(xdim, ydim)
 
     if radius_range is None:
+        # Let the radius have a sane default value based on the grid size
         radius_range = (np.percentile(nhbrdist.flatten(), 67), 0)
 
     if codes is None:
-        #if we don't supply codes, we randomly sample them from the data
+        # If we don't supply codes, we randomly sample them from the data
         codes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
 
 
