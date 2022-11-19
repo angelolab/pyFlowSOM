@@ -24,6 +24,23 @@ cdef extern from "flowsom.c":
         )
 
 import numpy as np
+import scipy
+
+def neighborhood_distance(xdim, ydim):
+    # grid is basically list of all coordinates in neighborhood
+    #
+    # [19]: np.meshgrid(np.arange(1,3+1), np.arange(1,3+1))
+    # Out[19]:
+    # [array([[1, 2, 3],
+    #         [1, 2, 3],
+    #         [1, 2, 3]]),
+    #  array([[1, 1, 1],
+    #         [2, 2, 2],
+    #         [3, 3, 3]])]
+    grid = np.meshgrid(np.arange(1,xdim+1), np.arange(1,ydim+1))
+    grid = np.column_stack((grid[0].flat, grid[1].flat))
+    # setting p=inf is the same as chebyshev distance, or Maximal distance
+    return scipy.spatial.distance_matrix(grid, grid, p=float('inf'))
 
 def som(
     data,
@@ -79,11 +96,38 @@ def som(
     -------
     np.Typing.NDArray[]
     """
-
-    nhbrdist = [0,1,2,3,4,5,6,7,8,9] # fixme, replace with real, non-testdummy
+    nhbrdist = neighborhood_distance(xdim, ydim)
 
     if radius_range is None:
-        radius_range = (np.percentile(nhbrdist, 0.67), 0)
+        radius_range = (np.percentile(nhbrdist.flatten(), 67), 0)
+
+    if codes is None:
+        #if we don't supply codes, we randomly sample them from the data
+        codes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
+
+
+    if not data.flags['F_CONTIGUOUS']:
+        data = np.asfortranarray(data)
+    cdef double[::1,:] data_mv = data
+    cdef Py_ssize_t data_rows = data.shape[0]
+    cdef Py_ssize_t data_cols = data.shape[1]
+
+
+    if not codes.flags['F_CONTIGUOUS']:
+        codes = np.asfortranarray(codes)
+    cdef double[::1,:] codes_mv = codes
+    cdef Py_ssize_t codes_rows = codes.shape[0]
+    cdef Py_ssize_t codes_cols = codes.shape[1]
+
+    if codes_cols != data_cols:
+        raise Exception(f"When passing codes, it must have the same number of columns as the data, codes has {codes_cols} columns, data has {data_cols} columns")
+    if codes_rows != xdim * ydim:
+        raise Exception(f"When passing codes, it must have the same number of rows as xdim * ydim. Codes has {codes_rows} rows, xdim * ydim = {xdim * ydim}")
+
+    if importance is not None:
+        # scale the data by the importance weights
+        raise NotImplementedError("importance weights not implemented yet")
+
 
 def map_data_to_codes(codes, newdata, distf=2):
     """Assign nearest node to each obersevation in newdata
