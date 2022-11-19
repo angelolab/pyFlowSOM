@@ -47,11 +47,9 @@ def som(
     xdim = 10,
     ydim = 10,
     rlen = 10,
-    mst = 1,
     alpha_range = (0.05, 0.01),
     radius_range = None,
     distf = 2,
-    silent = False,
     codes = None,
     importance = None,
     ):
