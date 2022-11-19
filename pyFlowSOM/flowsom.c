@@ -147,7 +147,7 @@ void C_mapDataToCodes(
     int dist
     )
 {
-    int i, cd, counter, minid;
+    int i, cd, minid;
     double tmp, mindist;
     double (*distf)(double*,double*,int,int,int);
 
