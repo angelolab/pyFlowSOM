@@ -80,7 +80,6 @@ def test_som_and_map_end_to_end_and_check_clusters(example_som_input, example_cl
 
 
 def test_som_and_map_end_to_end_and_save_results(example_som_input, example_cluster_groundtruth):
-
     node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
     clusters, dists = map_data_to_codes(node_output, example_som_input)
 
