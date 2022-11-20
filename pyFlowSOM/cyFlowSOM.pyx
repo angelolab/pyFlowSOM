@@ -113,7 +113,6 @@ def som(
     cdef Py_ssize_t data_rows = data.shape[0]
     cdef Py_ssize_t data_cols = data.shape[1]
 
-
     if not codes.flags['F_CONTIGUOUS']:
         codes = np.asfortranarray(codes)
     cdef double[::1,:] codes_mv = codes
@@ -123,8 +122,8 @@ def som(
     if not nhbrdist.flags['F_CONTIGUOUS']:
         nhbrdist = np.asfortranarray(nhbrdist)
     cdef double[::1,:] nhbrdist_mv = nhbrdist
-    cdef Py_ssize_t nhbrdist_rows = nhbrdist.shape[0]
-    cdef Py_ssize_t nhbrdist_cols = nhbrdist.shape[1]
+    print(nhbrdist.shape)
+    print(nhbrdist)
 
     if codes_cols != data_cols:
         raise Exception(f"When passing codes, it must have the same number of columns as the data, codes has {codes_cols} columns, data has {data_cols} columns")
@@ -154,14 +153,20 @@ def som(
         &data_mv[0, 0],
         &codes_mv[0, 0],
         &nhbrdist_mv[0, 0],
+
         alpha_range[0],
         alpha_range[1],
+
         radius_range[0],
         radius_range[1],
+
         &xDists_mv[0],
+
         data_rows,
         data_cols,
+
         nCodes,
+
         rlen,
         distf
         )
