@@ -63,10 +63,6 @@ def test_map_data_to_codes_handles_c_continuous_arrays(
     assert np.array_equal(example_cluster_groundtruth, cluster)
 
 
-def test_som_runs(example_som_input):
-    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
-
-
 def test_som_and_check_node_output(example_som_input, example_node_output):
     node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
 
