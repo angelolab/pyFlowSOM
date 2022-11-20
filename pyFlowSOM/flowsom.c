@@ -4,7 +4,7 @@
 #include <math.h>
 
 #define RANDIN  srand(42)
-#define UNIF rand() / RAND_MAX
+#define UNIF (rand() / (RAND_MAX + 1.0))
 
 #define EPS 1e-4                /* relative test of equality of distances */
 
