@@ -122,8 +122,6 @@ def som(
     if not nhbrdist.flags['F_CONTIGUOUS']:
         nhbrdist = np.asfortranarray(nhbrdist)
     cdef double[::1,:] nhbrdist_mv = nhbrdist
-    print(nhbrdist.shape)
-    print(nhbrdist)
 
     if codes_cols != data_cols:
         raise Exception(f"When passing codes, it must have the same number of columns as the data, codes has {codes_cols} columns, data has {data_cols} columns")
@@ -137,17 +135,19 @@ def som(
     xDists = np.zeros(nCodes, dtype=np.float64)
     cdef double [:] xDists_mv = xDists
 
-    print("calling C_SOM")
+    print("\n########")
+    print(f"data: row={data_rows}, col={data_cols}")
+    print(f"data.shape: {data.shape}")
+    print(f"codes.shape: {codes.shape}")
+    print(f"nhbrdist.shape: {nhbrdist.shape}")
+    print(nhbrdist)
     print("\n**********")
-    print(alpha_range[0])
-    print(alpha_range[1])
-    print(radius_range[0])
-    print(radius_range[1])
-    print(data_rows)
-    print(data_cols)
-    print(nCodes)
-    print(rlen)
-    print(distf)
+    print("alpha:" ,alpha_range[0] ,alpha_range[1])
+    print("radius:", radius_range[0], radius_range[1])
+    print("xDists.shape", xDists.shape)
+    print("ncodes:", nCodes)
+    print("rlen:", rlen)
+    print("distf:", distf)
 
     C_SOM(
         &data_mv[0, 0],
