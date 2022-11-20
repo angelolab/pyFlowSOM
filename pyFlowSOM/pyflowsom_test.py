@@ -1,9 +1,10 @@
-import pytest
-import pandas as pd
 from pathlib import Path
-import numpy as np
 
-from . import som, map_data_to_codes
+import numpy as np
+import pandas as pd
+import pytest
+
+from . import map_data_to_codes, som
 
 THIS_DIR = Path(__file__).parent
 
@@ -42,7 +43,7 @@ def example_cluster_groundtruth():
     return arr
 
 
-def test_som(example_som_input):
+def test_som_runs(example_som_input):
     som_out = som(example_som_input, xdim=10, ydim=10, rlen=10)
 
 
@@ -62,3 +63,32 @@ def test_map_data_to_codes_handles_c_continuous_arrays(
     assert codes.shape == (41646,)
     assert dists.shape == (41646,)
     assert np.array_equal(example_cluster_groundtruth, codes)
+
+
+def test_som_and_check_node_output(
+        example_som_input,
+        example_node_output,
+        example_cluster_groundtruth):
+    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
+
+    assert example_node_output.shape == node_output.shape
+    assert np.array_equal(example_node_output, node_output)
+
+def test_som_and_map_end_to_end_and_check_results(
+        example_som_input,
+        example_cluster_groundtruth):
+    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
+
+    clusters, dists = map_data_to_codes(node_output, np.ascontiguousarray(example_som_input))
+    assert example_cluster_groundtruth.shape == clusters.shape
+    assert np.array_equal(example_cluster_groundtruth, clusters)
+
+def test_som_and_map_end_to_end_and_save_results(
+        example_som_input,
+        example_cluster_groundtruth):
+    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
+
+    clusters, dists = map_data_to_codes(node_output, np.ascontiguousarray(example_som_input))
+    import pandas as pd
+    pd.DataFrame(clusters, columns=("cluster",)).to_csv('clusters_from_python.csv',index=False)
+    pd.DataFrame(example_cluster_groundtruth, columns=("cluster",)).to_csv('clusters_from_example.csv', index=False)

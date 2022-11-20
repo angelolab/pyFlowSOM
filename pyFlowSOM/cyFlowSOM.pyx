@@ -3,14 +3,16 @@ cdef extern from "flowsom.c":
         double *data,
         double *codes,
         double *nhbrdist,
-        double *alphas,
-        double *radii,
+        double alpha_start,
+        double alpha_end,
+        double radius_start,
+        double radius_end,
         double *xdists,
-        int *pn,
-        int *ppx,
-        int *pncodes,
-        int *prlen,
-        int *dist
+        int n,
+        int px,
+        int ncodes,
+        int rlen,
+        int dist
         )
     void C_mapDataToCodes(
         double *data,
@@ -100,10 +102,10 @@ def som(
         # Let the radius have a sane default value based on the grid size
         radius_range = (np.percentile(nhbrdist.flatten(), 67), 0)
 
+    nCodes = xdim * ydim
     if codes is None:
         # If we don't supply codes, we randomly sample them from the data
         codes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
-
 
     if not data.flags['F_CONTIGUOUS']:
         data = np.asfortranarray(data)
@@ -118,6 +120,12 @@ def som(
     cdef Py_ssize_t codes_rows = codes.shape[0]
     cdef Py_ssize_t codes_cols = codes.shape[1]
 
+    if not nhbrdist.flags['F_CONTIGUOUS']:
+        nhbrdist = np.asfortranarray(nhbrdist)
+    cdef double[::1,:] nhbrdist_mv = nhbrdist
+    cdef Py_ssize_t nhbrdist_rows = nhbrdist.shape[0]
+    cdef Py_ssize_t nhbrdist_cols = nhbrdist.shape[1]
+
     if codes_cols != data_cols:
         raise Exception(f"When passing codes, it must have the same number of columns as the data, codes has {codes_cols} columns, data has {data_cols} columns")
     if codes_rows != xdim * ydim:
@@ -126,6 +134,39 @@ def som(
     if importance is not None:
         # scale the data by the importance weights
         raise NotImplementedError("importance weights not implemented yet")
+
+    xDists = np.arange(nCodes, dtype=np.float64)
+    cdef double [:] xDists_mv = xDists
+
+    print("calling C_SOM")
+    print("\n**********")
+    print(alpha_range[0])
+    print(alpha_range[1])
+    print(radius_range[0])
+    print(radius_range[1])
+    print(data_rows)
+    print(data_cols)
+    print(nCodes)
+    print(rlen)
+    print(distf)
+
+    C_SOM(
+        &data_mv[0, 0],
+        &codes_mv[0, 0],
+        &nhbrdist_mv[0, 0],
+        alpha_range[0],
+        alpha_range[1],
+        radius_range[0],
+        radius_range[1],
+        &xDists_mv[0],
+        data_rows,
+        data_cols,
+        nCodes,
+        rlen,
+        distf
+        )
+
+    return codes
 
 
 def map_data_to_codes(codes, newdata, distf=2):

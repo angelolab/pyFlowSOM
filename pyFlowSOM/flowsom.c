@@ -58,29 +58,30 @@ void C_SOM(
     double *data,
     double *codes,
     double *nhbrdist,
-    double *alphas,
-    double *radii,
+    double alpha_start,
+    double alpha_end,
+    double radius_start,
+    double radius_end,
     double *xdists, /* working arrays */
-    int *pn,
-    int *ppx,
-    int *pncodes,
-    int *prlen,
-    int *dist
+    int n,
+    int px,
+    int ncodes,
+    int rlen,
+    int dist
     )
 {
-    int n = *pn, px = *ppx, ncodes = *pncodes, rlen = *prlen;
     int cd, i, j, k, nearest, niter;
     double tmp, threshold, alpha, thresholdStep;
     double change;
     double (*distf)(double*,double*,int,int,int);
 
-    if(*dist == 1){
+    if(dist == 1){
         distf = &manh;
-    } else if (*dist == 2){
+    } else if (dist == 2){
         distf = &eucl;
-    } else if (*dist == 3){
+    } else if (dist == 3){
         distf = &chebyshev;
-    } else if (*dist == 4){
+    } else if (dist == 4){
         distf = &cosine;
     } else {
         distf = &eucl;
@@ -88,8 +89,8 @@ void C_SOM(
 
     RANDIN;
     niter = rlen * n;
-    threshold = radii[0];
-    thresholdStep = (radii[0] - radii[1]) / (double) niter;
+    threshold = radius_start;
+    thresholdStep = (radius_start - radius_end) / (double) niter;
     change = 1.0;
 
 
@@ -120,7 +121,7 @@ void C_SOM(
         }
 
         if (threshold < 1.0) threshold = 0.5;
-        alpha = alphas[0] - (alphas[0] - alphas[1]) * (double)k/(double)niter;
+        alpha = alpha_start - (alpha_start - alpha_end) * (double)k/(double)niter;
 
         for (cd = 0; cd < ncodes; cd++) {
             if(nhbrdist[cd + ncodes*nearest] > threshold) continue;
