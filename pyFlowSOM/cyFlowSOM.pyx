@@ -135,7 +135,7 @@ def som(
         # scale the data by the importance weights
         raise NotImplementedError("importance weights not implemented yet")
 
-    xDists = np.arange(nCodes, dtype=np.float64)
+    xDists = np.zeros(nCodes, dtype=np.float64)
     cdef double [:] xDists_mv = xDists
 
     print("calling C_SOM")
@@ -213,9 +213,9 @@ def map_data_to_codes(codes, newdata, distf=2):
     cdef Py_ssize_t newdata_rows = newdata.shape[0]
     cdef Py_ssize_t newdata_cols = newdata.shape[1]
 
-    nnCodes = np.arange(newdata_rows, dtype=np.dtype("i"))
-    nnDists = np.arange(newdata_rows, dtype=np.float64)
-    cdef int [:] nnCodes_mv = nnCodes
+    nnClusters = np.zeros(newdata_rows, dtype=np.dtype("i"))
+    nnDists = np.zeros(newdata_rows, dtype=np.float64)
+    cdef int [:] nnClusters_mv = nnClusters
     cdef double [:] nnDists_mv = nnDists
 
     C_mapDataToCodes(
@@ -224,9 +224,9 @@ def map_data_to_codes(codes, newdata, distf=2):
         codes_rows,
         newdata_rows,
         codes_cols,
-        &nnCodes_mv[0],
+        &nnClusters_mv[0],
         &nnDists_mv[0],
         distf
         )
 
-    return (nnCodes, nnDists)
+    return (nnClusters, nnDists)
