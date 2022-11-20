@@ -39,7 +39,7 @@ def neighborhood_distance(xdim, ydim):
     #  array([[1, 1, 1],
     #         [2, 2, 2],
     #         [3, 3, 3]])]
-    grid = np.meshgrid(np.arange(1,xdim+1), np.arange(1,ydim+1))
+    grid = np.meshgrid(np.arange(1, xdim + 1), np.arange(1, ydim + 1))
     grid = np.column_stack((grid[0].flat, grid[1].flat))
     # setting p=inf is the same as chebyshev distance, or Maximal distance
     return scipy.spatial.distance_matrix(grid, grid, p=float('inf'))
