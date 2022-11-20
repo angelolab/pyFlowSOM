@@ -43,10 +43,6 @@ def example_cluster_groundtruth():
     return arr
 
 
-def test_som_runs(example_som_input):
-    som_out = som(example_som_input, xdim=10, ydim=10, rlen=10)
-
-
 def test_map_data_to_codes(example_som_input, example_node_output, example_cluster_groundtruth):
     codes, dists = map_data_to_codes(example_node_output, example_som_input)
 
@@ -65,6 +61,10 @@ def test_map_data_to_codes_handles_c_continuous_arrays(
     assert cluster.shape == (41646,)
     assert dists.shape == (41646,)
     assert np.array_equal(example_cluster_groundtruth, cluster)
+
+
+def test_som_runs(example_som_input):
+    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
 
 
 def test_som_and_check_node_output(example_som_input, example_node_output):
