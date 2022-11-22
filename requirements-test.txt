@@ -6,3 +6,4 @@ pytest-cov>=3.0.0,<4
 pytest-mock<4.0.0
 pytest-pycodestyle>=2.3.0,<3.0
 pytest-randomly>=3.11.0,<4
+seaborn>=0.12.1<1.0

@@ -9,7 +9,7 @@ from . import map_data_to_codes, som
 THIS_DIR = Path(__file__).parent
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture()
 def example_som_input():
     """Each row is a pixel, each column is a marker
     original image could be: 66 x 631 = 41,646
@@ -21,7 +21,16 @@ def example_som_input():
     return arr
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture()
+def example_som_input_df():
+    """Each row is a pixel, each column is a marker
+
+    Returns the df with marker names
+    """
+    return pd.read_csv(THIS_DIR.parent / 'examples' / 'example_som_input.csv')
+
+
+@pytest.fixture()
 def example_node_output():
     """Each row is a node, each column is a marker
     """
@@ -32,7 +41,7 @@ def example_node_output():
     return arr
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture()
 def example_cluster_groundtruth():
     """Each row is a cluster, each column is a marker
     """
@@ -87,3 +96,35 @@ def test_som_and_map_end_to_end_and_save_results(example_som_input, example_clus
         .to_csv('clusters_from_python.csv', index=False)
     pd.DataFrame(example_cluster_groundtruth, columns=("cluster",)) \
         .to_csv('clusters_from_example.csv', index=False)
+
+
+def save_heatmap(cluster_labeled_input_data, output_name):
+    """Save a heatmap of the cluster assignments
+    cluster: 1D array of cluster assignments
+    data: 2D array of data
+    output_name: name of the output file
+    """
+    import seaborn as sns
+
+    # Find mean of each cluster
+    df_mean = cluster_labeled_input_data.groupby(['cluster']).mean()
+
+    # Make heatmap
+    sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
+    sns_plot.figure.savefig(f"{output_name}.png")
+
+
+def test_debug_out_heatmap_comparison(
+        example_som_input,
+        example_som_input_df,
+        example_cluster_groundtruth):
+
+    # Run the SOM
+    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
+    end_to_end_cluster, dists = map_data_to_codes(node_output, example_som_input)
+
+    example_som_input_df['cluster'] = end_to_end_cluster
+    save_heatmap(example_som_input_df, 'end_to_end')
+
+    example_som_input_df['cluster'] = example_cluster_groundtruth
+    save_heatmap(example_som_input_df, 'ground_truth')
