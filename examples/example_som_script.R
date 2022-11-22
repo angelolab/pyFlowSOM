@@ -1,9 +1,9 @@
 # Example script to run FlowSOM in R
 
 # Download FlowSOM from github (if need be, install devtools with install.packages("devtools"))
-devtools::install_version('igraph', version='1.3.2', repos='https://cran.rstudio.org/')
-devtools::install_github("y2kbugger/FlowSOM", build_vignettes=FALSE)
-
+#devtools::install_version('igraph', version='1.3.2', repos='https://cran.rstudio.org/')
+devtools::install_github("SofieVG/FlowSOM", build_vignettes=FALSE)
+#devtools::install_github("y2kbugger/FlowSOM", build_vignettes=FALSE)
 
 # Load FlowSOM package
 library(FlowSOM)
