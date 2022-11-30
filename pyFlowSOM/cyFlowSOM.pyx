@@ -54,6 +54,7 @@ def som(
     distf = 2,
     codes = None,
     importance = None,
+    deterministic = False,
     ):
     """
     Build a self-organizing map
@@ -69,8 +70,6 @@ def som(
         Height of the grid
     rlen : int
         Number of times to loop over the training data for each MST
-    mst : int
-        Number of times to build an MST
     alpha_range : Tuple[float, float]
         Start and end learning rate
     radius_range : Tuple[float, float]
@@ -82,8 +81,6 @@ def som(
         2 = euclidean
         3 = chebyshev
         4 = cosine
-    silent : bool
-        Suppress debug print statements
     codes : np.Typing.NDArray[np.float64]
         Cluster centers to start with.
         shape = (xdim * ydim, parameter_count)
@@ -105,7 +102,10 @@ def som(
     nCodes = xdim * ydim
     if codes is None:
         # If we don't supply codes, we randomly sample them from the data
-        codes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
+        if deterministic == True:
+            codes = data[0: xdim * ydim, :]
+        else:
+            codes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
 
     if not data.flags['F_CONTIGUOUS']:
         data = np.asfortranarray(data)
@@ -134,20 +134,6 @@ def som(
 
     xDists = np.zeros(nCodes, dtype=np.float64)
     cdef double [:] xDists_mv = xDists
-
-    print("\n########")
-    print(f"data: row={data_rows}, col={data_cols}")
-    print(f"data.shape: {data.shape}")
-    print(f"codes.shape: {codes.shape}")
-    print(f"nhbrdist.shape: {nhbrdist.shape}")
-    print(nhbrdist)
-    print("\n**********")
-    print("alpha:" ,alpha_range[0] ,alpha_range[1])
-    print("radius:", radius_range[0], radius_range[1])
-    print("xDists.shape", xDists.shape)
-    print("ncodes:", nCodes)
-    print("rlen:", rlen)
-    print("distf:", distf)
 
     C_SOM(
         &data_mv[0, 0],
