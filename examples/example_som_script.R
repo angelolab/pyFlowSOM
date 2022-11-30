@@ -25,10 +25,7 @@ str(som_out)
 nodes = som_out$codes
 write.csv(nodes, "example_node_output_script.csv", row.names=FALSE)
 
-# Can use those nodes to map unseen data (here, just demonstrating using the original data)
-# This function is not stochastic
-read_in_nodes = read.csv("example_node_output.csv")
-mapping_out = FlowSOM:::MapDataToCodes(as.matrix(read_in_nodes), as.matrix(dat))
+mapping_out = FlowSOM:::MapDataToCodes(as.matrix(nodes), as.matrix(dat))
 
 # From this output, we can extract the cluster for each observation
 # Using example_node_output.csv, you should be able to get the same clusters
