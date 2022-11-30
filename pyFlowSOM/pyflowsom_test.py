@@ -7,6 +7,7 @@ import pytest
 from . import map_data_to_codes, som
 
 THIS_DIR = Path(__file__).parent
+EX_DIR = THIS_DIR.parent / 'examples'
 
 
 @pytest.fixture()
@@ -14,7 +15,7 @@ def example_som_input():
     """Each row is a pixel, each column is a marker
     original image could be: 66 x 631 = 41,646
     """
-    df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_som_input.csv')
+    df = pd.read_csv(EX_DIR / 'example_som_input.csv')
     arr = df.to_numpy()
     assert arr.shape == (41646, 16)
     assert arr.dtype == np.float64
@@ -27,14 +28,14 @@ def example_som_input_df():
 
     Returns the df with marker names
     """
-    return pd.read_csv(THIS_DIR.parent / 'examples' / 'example_som_input.csv')
+    return pd.read_csv(EX_DIR / 'example_som_input.csv')
 
 
 @pytest.fixture()
 def example_node_output():
     """Each row is a node, each column is a marker
     """
-    df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_node_output.csv')
+    df = pd.read_csv(EX_DIR / 'example_node_output.csv')
     arr = df.to_numpy()
     assert arr.shape == (100, 16)
     assert arr.dtype == np.float64
@@ -45,7 +46,7 @@ def example_node_output():
 def example_cluster_groundtruth():
     """Each row is a cluster, each column is a marker
     """
-    df = pd.read_csv(THIS_DIR.parent / 'examples' / 'example_clusters_output.csv')
+    df = pd.read_csv(EX_DIR / 'example_clusters_output.csv')
     arr = df['cluster'].to_numpy()
     assert arr.shape == (41646,)
     assert arr.dtype == np.int
@@ -93,9 +94,9 @@ def test_som_and_map_end_to_end_and_save_results(example_som_input, example_clus
     clusters, dists = map_data_to_codes(node_output, example_som_input)
 
     pd.DataFrame(clusters, columns=("cluster",)) \
-        .to_csv('clusters_from_python.csv', index=False)
+        .to_csv(EX_DIR / 'clusters_from_python.csv', index=False)
     pd.DataFrame(example_cluster_groundtruth, columns=("cluster",)) \
-        .to_csv('clusters_from_example.csv', index=False)
+        .to_csv(EX_DIR / 'clusters_from_example.csv', index=False)
 
 
 def save_heatmap(cluster_labeled_input_data, output_name):
@@ -111,7 +112,7 @@ def save_heatmap(cluster_labeled_input_data, output_name):
 
     # Make heatmap
     sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
-    sns_plot.figure.savefig(f"{output_name}.png")
+    sns_plot.figure.savefig(EX_DIR / f"{output_name}.png")
 
 
 def test_debug_out_heatmap_comparison(
