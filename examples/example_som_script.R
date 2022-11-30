@@ -23,7 +23,7 @@ str(som_out)
 # Extract SOM nodes (what we want from the output), example output nodes in example_node_output.csv
 # SOM is stochastic so your output may be different
 nodes = som_out$codes
-write.csv(nodes, "example_node_output_script.csv", row.names=FALSE)
+write.csv(nodes, "example_node_output.csv", row.names=FALSE)
 
 mapping_out = FlowSOM:::MapDataToCodes(as.matrix(nodes), as.matrix(dat))
 
@@ -31,7 +31,7 @@ mapping_out = FlowSOM:::MapDataToCodes(as.matrix(nodes), as.matrix(dat))
 # Using example_node_output.csv, you should be able to get the same clusters
 clusters = mapping_out[,1]
 dat$cluster = clusters
-write.csv(dat, "example_clusters_output_script.csv", row.names=FALSE)
+write.csv(dat, "example_clusters_output.csv", row.names=FALSE)
 
 
 ## Make heatmap of outputs to assess clustering
@@ -41,7 +41,7 @@ clust_mean = scale(clust_mean)
 
 # If need be, install pheatmap using install.packages("pheatmap")
 library(pheatmap)
-pdf("example_heatmap_script.pdf")
+pdf("example_heatmap.pdf")
 pheatmap(clust_mean, breaks=seq(-3,3,length.out=99))
 dev.off()
 
