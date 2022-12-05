@@ -11,18 +11,6 @@ EX_DIR = THIS_DIR.parent / 'examples'
 
 
 @pytest.fixture()
-def example_som_input():
-    """Each row is a pixel, each column is a marker
-    original image could be: 66 x 631 = 41,646
-    """
-    df = pd.read_csv(EX_DIR / 'example_som_input.csv')
-    arr = df.to_numpy()
-    assert arr.shape == (41646, 16)
-    assert arr.dtype == np.float64
-    return arr
-
-
-@pytest.fixture()
 def example_som_input_df():
     """Each row is a pixel, each column is a marker
 
@@ -32,22 +20,43 @@ def example_som_input_df():
 
 
 @pytest.fixture()
-def example_node_output():
-    """Each row is a node, each column is a marker
+def example_som_input(example_som_input_df):
+    """Each row is a pixel, each column is a marker
+    original image could be: 66 x 631 = 41,646
     """
-    df = pd.read_csv(EX_DIR / 'example_node_output.csv')
-    arr = df.to_numpy()
+    arr = example_som_input_df.to_numpy(copy=True)
+    assert arr.shape == (41646, 16)
+    assert arr.dtype == np.float64
+    return arr
+
+
+@pytest.fixture()
+def example_node_output_df():
+    """Each row is a node, each column is a marker
+
+    Returns the df with marker names
+    """
+    return pd.read_csv(EX_DIR / 'example_node_output.csv')
+
+
+@pytest.fixture()
+def example_node_output(example_node_output_df):
+    """Each row is a node, each column is a marker"""
+    arr = example_node_output_df.to_numpy(copy=True)
     assert arr.shape == (100, 16)
     assert arr.dtype == np.float64
     return arr
 
 
 @pytest.fixture()
-def example_cluster_groundtruth():
-    """Each row is a cluster, each column is a marker
-    """
-    df = pd.read_csv(EX_DIR / 'example_clusters_output.csv')
-    arr = df['cluster'].to_numpy()
+def example_cluster_groundtruth_df():
+    return pd.read_csv(EX_DIR / 'example_clusters_output.csv')
+
+
+@pytest.fixture()
+def example_cluster_groundtruth(example_cluster_groundtruth_df):
+    """Each row is a cluster, each column is a marker"""
+    arr = example_cluster_groundtruth_df['cluster'].to_numpy(copy=True)
     assert arr.shape == (41646,)
     assert arr.dtype == np.int
     return arr
