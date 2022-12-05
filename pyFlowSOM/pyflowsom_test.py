@@ -89,16 +89,6 @@ def test_som_and_map_end_to_end_and_check_clusters(example_som_input, example_cl
     np.testing.assert_array_equal(example_cluster_groundtruth, clusters)
 
 
-def test_som_and_map_end_to_end_and_save_results(example_som_input, example_cluster_groundtruth):
-    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10, deterministic=True)
-    clusters, dists = map_data_to_codes(node_output, example_som_input)
-
-    pd.DataFrame(clusters, columns=("cluster",)) \
-        .to_csv(EX_DIR / 'clusters_from_python.csv', index=False)
-    pd.DataFrame(example_cluster_groundtruth, columns=("cluster",)) \
-        .to_csv(EX_DIR / 'clusters_from_example.csv', index=False)
-
-
 def save_heatmap(cluster_labeled_input_data, output_name):
     """Save a heatmap of the cluster assignments
     cluster: 1D array of cluster assignments
@@ -114,7 +104,8 @@ def save_heatmap(cluster_labeled_input_data, output_name):
     sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
     sns_plot.figure.savefig(EX_DIR / f"{output_name}.png")
 
-@pytest.skip("This is a manual test for visual inspection")
+
+@pytest.mark.skip("This is a manual test for visual inspection")
 def test_debug_out_heatmap_comparison(
         example_som_input,
         example_som_input_df,
