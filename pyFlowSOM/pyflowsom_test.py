@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from . import map_data_to_codes, som
+from . import map_data_to_nodes, som
 
 THIS_DIR = Path(__file__).parent
 EX_DIR = THIS_DIR.parent / 'examples'
@@ -62,20 +62,20 @@ def example_cluster_groundtruth(example_cluster_groundtruth_df):
     return arr
 
 
-def test_map_data_to_codes(example_som_input, example_node_output, example_cluster_groundtruth):
-    codes, dists = map_data_to_codes(example_node_output, example_som_input)
+def test_map_data_to_nodes(example_som_input, example_node_output, example_cluster_groundtruth):
+    nodes, dists = map_data_to_nodes(example_node_output, example_som_input)
 
-    assert codes.shape == (41646,)
+    assert nodes.shape == (41646,)
     assert dists.shape == (41646,)
-    np.testing.assert_array_equal(example_cluster_groundtruth, codes)
+    np.testing.assert_array_equal(example_cluster_groundtruth, nodes)
 
 
-def test_map_data_to_codes_handles_c_continuous_arrays(
+def test_map_data_to_nodes_handles_c_continuous_arrays(
         example_som_input,
         example_node_output,
         example_cluster_groundtruth):
 
-    cluster, dists = map_data_to_codes(example_node_output, example_som_input)
+    cluster, dists = map_data_to_nodes(example_node_output, example_som_input)
 
     assert cluster.shape == (41646,)
     assert dists.shape == (41646,)
@@ -92,7 +92,7 @@ def test_som_and_check_node_output(example_som_input, example_node_output):
 
 def test_som_and_map_end_to_end_and_check_clusters(example_som_input, example_cluster_groundtruth):
     node_output = som(example_som_input, xdim=10, ydim=10, rlen=10, deterministic=True)
-    clusters, dists = map_data_to_codes(node_output, example_som_input)
+    clusters, dists = map_data_to_nodes(node_output, example_som_input)
 
     assert example_cluster_groundtruth.shape == clusters.shape
     np.testing.assert_array_equal(example_cluster_groundtruth, clusters)
@@ -122,7 +122,7 @@ def test_debug_out_heatmap_comparison(
 
     # Run the SOM
     node_output = som(example_som_input, xdim=10, ydim=10, rlen=10, deterministic=True)
-    end_to_end_cluster, dists = map_data_to_codes(node_output, example_som_input)
+    end_to_end_cluster, dists = map_data_to_nodes(node_output, example_som_input)
 
     example_som_input_df['cluster'] = end_to_end_cluster
     save_heatmap(example_som_input_df, 'end_to_end')

@@ -1,7 +1,7 @@
 cdef extern from "flowsom.c":
     void C_SOM(
         double *data,
-        double *codes,
+        double *nodes,
         double *nhbrdist,
         double alpha_start,
         double alpha_end,
@@ -10,18 +10,18 @@ cdef extern from "flowsom.c":
         double *xdists,
         int n,
         int px,
-        int ncodes,
+        int n_nodes,
         int rlen,
         int dist
         )
-    void C_mapDataToCodes(
+    void C_mapDataToNodes(
         double *data,
-        double *codes,
-        int pncodes,
-        int pnd,
-        int pp,
-        int *nnCodes,
-        double *nnDists,
+        double *nodes,
+        int n_nodes,
+        int nd,
+        int p,
+        int *nn_nodes,
+        double *nn_dists,
         int dist
         )
 
@@ -52,7 +52,7 @@ def som(
     alpha_range = (0.05, 0.01),
     radius_range = None,
     distf = 2,
-    codes = None,
+    nodes = None,
     importance = None,
     deterministic = False,
     ):
@@ -81,10 +81,10 @@ def som(
         2 = euclidean
         3 = chebyshev
         4 = cosine
-    codes : np.Typing.NDArray[np.float64]
+    nodes : np.Typing.NDArray[np.float64]
         Cluster centers to start with.
         shape = (xdim * ydim, parameter_count)
-        If None, codes are initialized by randomly selecting observations
+        If None, nodes are initialized by randomly selecting observations
     importance : np.Typing.NDArray[np.float64]
         Scale parameters columns of input data an importance weight
         shape = (parameter_count,)
@@ -99,13 +99,13 @@ def som(
         # Let the radius have a sane default value based on the grid size
         radius_range = (np.percentile(nhbrdist.flatten(), 67), 0)
 
-    nCodes = xdim * ydim
-    if codes is None:
-        # If we don't supply codes, we randomly sample them from the data
+    n_nodes = xdim * ydim
+    if nodes is None:
+        # If we don't supply nodes, we randomly sample them from the data
         if deterministic == True:
-            codes = data[0: xdim * ydim, :]
+            nodes = data[0: xdim * ydim, :]
         else:
-            codes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
+            nodes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
 
     if not data.flags['F_CONTIGUOUS']:
         data = np.asfortranarray(data)
@@ -113,31 +113,31 @@ def som(
     cdef Py_ssize_t data_rows = data.shape[0]
     cdef Py_ssize_t data_cols = data.shape[1]
 
-    if not codes.flags['F_CONTIGUOUS']:
-        codes = np.asfortranarray(codes)
-    cdef double[::1,:] codes_mv = codes
-    cdef Py_ssize_t codes_rows = codes.shape[0]
-    cdef Py_ssize_t codes_cols = codes.shape[1]
+    if not nodes.flags['F_CONTIGUOUS']:
+        nodes = np.asfortranarray(nodes)
+    cdef double[::1,:] nodes_mv = nodes
+    cdef Py_ssize_t nodes_rows = nodes.shape[0]
+    cdef Py_ssize_t nodes_cols = nodes.shape[1]
 
     if not nhbrdist.flags['F_CONTIGUOUS']:
         nhbrdist = np.asfortranarray(nhbrdist)
     cdef double[::1,:] nhbrdist_mv = nhbrdist
 
-    if codes_cols != data_cols:
-        raise Exception(f"When passing codes, it must have the same number of columns as the data, codes has {codes_cols} columns, data has {data_cols} columns")
-    if codes_rows != xdim * ydim:
-        raise Exception(f"When passing codes, it must have the same number of rows as xdim * ydim. Codes has {codes_rows} rows, xdim * ydim = {xdim * ydim}")
+    if nodes_cols != data_cols:
+        raise Exception(f"When passing nodes, it must have the same number of columns as the data, nodes has {nodes_cols} columns, data has {data_cols} columns")
+    if nodes_rows != xdim * ydim:
+        raise Exception(f"When passing nodes, it must have the same number of rows as xdim * ydim. nodes has {nodes_rows} rows, xdim * ydim = {xdim * ydim}")
 
     if importance is not None:
         # scale the data by the importance weights
         raise NotImplementedError("importance weights not implemented yet")
 
-    xDists = np.zeros(nCodes, dtype=np.float64)
+    xDists = np.zeros(n_nodes, dtype=np.float64)
     cdef double [:] xDists_mv = xDists
 
     C_SOM(
         &data_mv[0, 0],
-        &codes_mv[0, 0],
+        &nodes_mv[0, 0],
         &nhbrdist_mv[0, 0],
 
         alpha_range[0],
@@ -151,23 +151,23 @@ def som(
         data_rows,
         data_cols,
 
-        nCodes,
+        n_nodes,
 
         rlen,
         distf
         )
 
-    return codes
+    return nodes
 
 
-def map_data_to_codes(codes, newdata, distf=2):
+def map_data_to_nodes(nodes, newdata, distf=2):
     """Assign nearest node to each obersevation in newdata
 
-    Both codes and newdata must represent the same parameters, in the same order.
+    Both nodes and newdata must represent the same parameters, in the same order.
 
     Parameters
     ----------
-    codes : np.typing.NDArray[np.float64]
+    nodes : np.typing.NDArray[np.float64]
         Nodes of the SOM.
         shape = (node_count, parameter_count)
         Fortan contiguous preffered
@@ -192,11 +192,11 @@ def map_data_to_codes(codes, newdata, distf=2):
 
     """
 
-    if not codes.flags['F_CONTIGUOUS']:
-        codes = np.asfortranarray(codes)
-    cdef double[::1,:] codes_mv = codes
-    cdef Py_ssize_t codes_rows = codes.shape[0]
-    cdef Py_ssize_t codes_cols = codes.shape[1]
+    if not nodes.flags['F_CONTIGUOUS']:
+        nodes = np.asfortranarray(nodes)
+    cdef double[::1,:] nodes_mv = nodes
+    cdef Py_ssize_t nodes_rows = nodes.shape[0]
+    cdef Py_ssize_t nodes_cols = nodes.shape[1]
 
     if not newdata.flags['F_CONTIGUOUS']:
         newdata = np.asfortranarray(newdata)
@@ -209,12 +209,12 @@ def map_data_to_codes(codes, newdata, distf=2):
     cdef int [:] nnClusters_mv = nnClusters
     cdef double [:] nnDists_mv = nnDists
 
-    C_mapDataToCodes(
+    C_mapDataToNodes(
         &newdata_mv[0, 0],
-        &codes_mv[0, 0],
-        codes_rows,
+        &nodes_mv[0, 0],
+        nodes_rows,
         newdata_rows,
-        codes_cols,
+        nodes_cols,
         &nnClusters_mv[0],
         &nnDists_mv[0],
         distf

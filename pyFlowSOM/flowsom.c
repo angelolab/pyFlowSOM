@@ -8,55 +8,55 @@
 
 #define EPS 1e-4                /* relative test of equality of distances */
 
-double eucl(double * p1, double * p2, int px, int n, int ncodes){
+double eucl(double * p1, double * p2, int px, int n, int n_nodes){
     int j;
     double tmp;
 
     double xdist = 0.0;
     for (j = 0; j < px; j++) {
-        tmp = p1[j*n] - p2[j*ncodes];
+        tmp = p1[j*n] - p2[j*n_nodes];
         xdist += tmp * tmp;
     }
     return sqrt(xdist);
 }
 
-double manh(double * p1, double * p2, int px, int n, int ncodes){
+double manh(double * p1, double * p2, int px, int n, int n_nodes){
     int j;
     double xdist = 0.0, tmp;
     for (j = 0; j < px; j++) {
-        tmp = p1[j*n] - p2[j*ncodes];
+        tmp = p1[j*n] - p2[j*n_nodes];
         xdist += fabs(tmp);
     }
     return xdist;
 }
 
-double chebyshev(double * p1, double * p2, int px, int n, int ncodes){
+double chebyshev(double * p1, double * p2, int px, int n, int n_nodes){
     int j;
     double xdist = 0.0, tmp;
     for (j = 0; j < px; j++) {
-        tmp = p1[j*n] - p2[j*ncodes];
+        tmp = p1[j*n] - p2[j*n_nodes];
         tmp = fabs(tmp);
         if(tmp > xdist) xdist = tmp;
     }
     return xdist;
 }
 
-double cosine(double * p1, double * p2, int px, int n, int ncodes){
+double cosine(double * p1, double * p2, int px, int n, int n_nodes){
     int j;
     double nom = 0;
     double denom1 = 0;
     double denom2 = 0;
     for (j = 0; j < px; j++) {
-        nom += p1[j*n] * p2[j*ncodes];
+        nom += p1[j*n] * p2[j*n_nodes];
         denom1 += p1[j*n] * p1[j*n];
-        denom2 +=  p2[j*ncodes] * p2[j*ncodes];
+        denom2 +=  p2[j*n_nodes] * p2[j*n_nodes];
     }
     return (-nom/(sqrt(denom1)*sqrt(denom2)))+1;
 }
 
 void C_SOM(
     double *data,
-    double *codes,
+    double *nodes,
     double *nhbrdist,
     double alpha_start,
     double alpha_end,
@@ -65,7 +65,7 @@ void C_SOM(
     double *xdists, /* working arrays */
     int n,
     int px,
-    int ncodes,
+    int n_nodes,
     int rlen,
     int dist
     )
@@ -114,22 +114,22 @@ void C_SOM(
 
         nearest = 0;
         /* calculate distances in x and y spaces, and keep track of the
-        nearest code */
-        for (cd = 0; cd < ncodes; cd++) {
-            xdists[cd] = distf(&data[i], &codes[cd], px, n, ncodes);
+        nearest node */
+        for (cd = 0; cd < n_nodes; cd++) {
+            xdists[cd] = distf(&data[i], &nodes[cd], px, n, n_nodes);
             if (xdists[cd] < xdists[nearest]) nearest = cd;
         }
 
         if (threshold < 1.0) threshold = 0.5;
         alpha = alpha_start - (alpha_start - alpha_end) * (double)k/(double)niter;
 
-        for (cd = 0; cd < ncodes; cd++) {
-            if(nhbrdist[cd + ncodes*nearest] > threshold) continue;
+        for (cd = 0; cd < n_nodes; cd++) {
+            if(nhbrdist[cd + n_nodes*nearest] > threshold) continue;
 
             for(j = 0; j < px; j++) {
-                tmp = data[i + j*n] - codes[cd + j*ncodes];
+                tmp = data[i + j*n] - nodes[cd + j*n_nodes];
                 change += fabs(tmp);
-                codes[cd + j*ncodes] += tmp * alpha;
+                nodes[cd + j*n_nodes] += tmp * alpha;
             }
         }
 
@@ -137,14 +137,14 @@ void C_SOM(
     }
 }
 
-void C_mapDataToCodes(
+void C_mapDataToNodes(
     double *data,
-    double *codes,
-    int ncodes,
+    double *nodes,
+    int n_nodes,
     int nd,
     int p,
-    int *nnCodes,
-    double *nnDists,
+    int *nn_nodes,
+    double *nn_dists,
     int dist
     )
 {
@@ -166,18 +166,18 @@ void C_mapDataToCodes(
 
     /* i is a counter over objects in data, cd  is a counter over SOM
     units, p is the number of columns, nd is the number of datapoints
-    and ncodes is the number of SOM units*/
+    and n_nodes is the number of SOM units*/
     for (i = 0; i < nd; i++) {
         minid = -1;
         mindist = DBL_MAX;
-        for (cd = 0; cd < ncodes; cd++) {
-            tmp = distf(&data[i], &codes[cd], p, nd, ncodes);
+        for (cd = 0; cd < n_nodes; cd++) {
+            tmp = distf(&data[i], &nodes[cd], p, nd, n_nodes);
             if(tmp < mindist){
                 mindist = tmp;
                 minid = cd;
             }
         }
-        nnCodes[i] = minid+1;
-        nnDists[i] = mindist;
+        nn_nodes[i] = minid+1;
+        nn_dists[i] = mindist;
     }
 }
