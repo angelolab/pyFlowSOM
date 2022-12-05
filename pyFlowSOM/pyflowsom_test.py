@@ -114,7 +114,7 @@ def save_heatmap(cluster_labeled_input_data, output_name):
     sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
     sns_plot.figure.savefig(EX_DIR / f"{output_name}.png")
 
-
+@pytest.skip("This is a manual test for visual inspection")
 def test_debug_out_heatmap_comparison(
         example_som_input,
         example_som_input_df,
