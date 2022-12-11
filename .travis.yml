@@ -38,7 +38,9 @@ install:
 script:
   - pip install -e .
   - python -m pytest --randomly-seed=42 --randomly-dont-reorganize --cov=pyFlowSOM --pycodestyle pyFlowSOM
+  - git clean -fdx
   - python -m cibuildwheel --output-dir wheelhouse
+  - ls -al wheelhouse
 
 after_failure:
   - cat out.log
