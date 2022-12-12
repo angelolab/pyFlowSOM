@@ -27,3 +27,14 @@ script:
 
 after_failure:
   - cat out.log
+
+# deploy to PyPI on tags
+before_deploy: "python3 -m pip install -r requirements.txt -r requirements-test.txt"
+deploy:
+  provider: pypi
+  username: "$PYPI_USERNAME"
+  skip_cleanup: true
+  on:
+    tags: true
+  password:
+    secure: "$PYPI_PASSWORD"
