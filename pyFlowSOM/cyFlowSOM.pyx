@@ -61,7 +61,7 @@ def som(
 
     Parameters
     ----------
-    data : np.Typing.NDArray[np.float64]
+    data : np.Typing.NDArray[np.dtype("d")]
         2D array containing the training observations
         shape: (observation_count, parameter_count)
     xdim : int
@@ -81,11 +81,11 @@ def som(
         2 = euclidean
         3 = chebyshev
         4 = cosine
-    nodes : np.Typing.NDArray[np.float64]
+    nodes : np.Typing.NDArray[np.dtype("d")]
         Cluster centers to start with.
         shape = (xdim * ydim, parameter_count)
         If None, nodes are initialized by randomly selecting observations
-    importance : np.Typing.NDArray[np.float64]
+    importance : np.Typing.NDArray[np.dtype("d")]
         Scale parameters columns of input data an importance weight
         shape = (parameter_count,)
 
@@ -132,7 +132,7 @@ def som(
         # scale the data by the importance weights
         raise NotImplementedError("importance weights not implemented yet")
 
-    xDists = np.zeros(n_nodes, dtype=np.float64)
+    xDists = np.zeros(n_nodes, dtype=np.dtype("d"))
     cdef double [:] xDists_mv = xDists
 
     C_SOM(
@@ -167,11 +167,11 @@ def map_data_to_nodes(nodes, newdata, distf=2):
 
     Parameters
     ----------
-    nodes : np.typing.NDArray[np.float64]
+    nodes : np.typing.NDArray[np.dtype("d")]
         Nodes of the SOM.
         shape = (node_count, parameter_count)
         Fortan contiguous preffered
-    newdata: np.typing.NDArray[np.float64]
+    newdata: np.typing.NDArray[np.dtype("d")]
         New observations to assign nodes.
         shape = (observation_count, parameter_count)
         Fortan contiguous preffered
@@ -184,7 +184,7 @@ def map_data_to_nodes(nodes, newdata, distf=2):
 
     Returns
     -------
-    (np.typing.NDArray[np.int32], np.typing.NDArray[np.float64])
+    (np.typing.NDArray[dtype("i")], np.typing.NDArray[np.dtype("d")])
         The first array contains the node index assigned to each observation.
             shape = (observation_count,)
         The second array contains the distance to the node for each observation.
@@ -205,7 +205,7 @@ def map_data_to_nodes(nodes, newdata, distf=2):
     cdef Py_ssize_t newdata_cols = newdata.shape[1]
 
     nnClusters = np.zeros(newdata_rows, dtype=np.dtype("i"))
-    nnDists = np.zeros(newdata_rows, dtype=np.float64)
+    nnDists = np.zeros(newdata_rows, dtype=np.dtype("d"))
     cdef int [:] nnClusters_mv = nnClusters
     cdef double [:] nnDists_mv = nnDists
 

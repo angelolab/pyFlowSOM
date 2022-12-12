@@ -16,7 +16,7 @@ def example_som_input_df():
 
     Returns the df with marker names
     """
-    return pd.read_csv(EX_DIR / 'example_som_input.csv')
+    return pd.read_csv(EX_DIR / 'example_som_input.csv', dtype=np.dtype("d"))
 
 
 @pytest.fixture()
@@ -26,7 +26,7 @@ def example_som_input(example_som_input_df):
     """
     arr = example_som_input_df.to_numpy(copy=True)
     assert arr.shape == (41646, 16)
-    assert arr.dtype == np.float64
+    assert arr.dtype == np.dtype("d")
     return arr
 
 
@@ -36,7 +36,7 @@ def example_node_output_df():
 
     Returns the df with marker names
     """
-    return pd.read_csv(EX_DIR / 'example_node_output.csv')
+    return pd.read_csv(EX_DIR / 'example_node_output.csv', dtype=np.dtype("d"))
 
 
 @pytest.fixture()
@@ -44,13 +44,15 @@ def example_node_output(example_node_output_df):
     """Each row is a node, each column is a marker"""
     arr = example_node_output_df.to_numpy(copy=True)
     assert arr.shape == (100, 16)
-    assert arr.dtype == np.float64
+    assert arr.dtype == np.dtype("d")
     return arr
 
 
 @pytest.fixture()
 def example_cluster_groundtruth_df():
-    return pd.read_csv(EX_DIR / 'example_clusters_output.csv')
+    return pd.read_csv(
+        EX_DIR / 'example_clusters_output.csv',
+        usecols=["cluster"], dtype=np.dtype("i"))
 
 
 @pytest.fixture()
@@ -58,7 +60,7 @@ def example_cluster_groundtruth(example_cluster_groundtruth_df):
     """Each row is a cluster, each column is a marker"""
     arr = example_cluster_groundtruth_df['cluster'].to_numpy(copy=True)
     assert arr.shape == (41646,)
-    assert arr.dtype == np.int
+    assert arr.dtype == np.dtype("i")
     return arr
 
 
