@@ -10,7 +10,7 @@ THIS_DIR = Path(__file__).parent
 EX_DIR = THIS_DIR.parent / 'examples'
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def example_som_input_df():
     """Each row is a pixel, each column is a marker
 
@@ -30,7 +30,7 @@ def example_som_input(example_som_input_df):
     return arr
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def example_node_output_df():
     """Each row is a node, each column is a marker
 
@@ -48,7 +48,7 @@ def example_node_output(example_node_output_df):
     return arr
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def example_cluster_groundtruth_df():
     return pd.read_csv(
         EX_DIR / 'example_clusters_output.csv',
