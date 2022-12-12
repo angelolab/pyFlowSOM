@@ -1,6 +1,7 @@
-from os import path, pardir
-from setuptools import Extension, setup
+from os import pardir, path
+
 from Cython.Build import cythonize
+from setuptools import Extension, setup
 
 VERSION = '0.1.0'
 
@@ -18,6 +19,7 @@ setup(
     name='pyFlowSOM',
     version=VERSION,
     packages=['pyFlowSOM'],
+    python_requires=">=3.8",
     ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
     license='Modified Apache License 2.0',
     description='A Python implementation of the SOM training functionality of FlowSOM',
