@@ -3,7 +3,7 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "numpy>=1,<2", "Cython>=0.29,<1"]
 
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* pp* *_ppc64le *_i686 *_s390x *-musllinux*"
+skip = "cp36-* cp37-* pp* *_ppc64le *_i686 *_s390x *-musllinux* *-win32"
 test-command = "pytest {project}/test"
 test-requires = ["pytest", "pandas"]
 build-verbosity = 3
