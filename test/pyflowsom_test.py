@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from . import map_data_to_nodes, som
+from pyFlowSOM import map_data_to_nodes, som
 
 THIS_DIR = Path(__file__).parent
 EX_DIR = THIS_DIR.parent / 'examples'
