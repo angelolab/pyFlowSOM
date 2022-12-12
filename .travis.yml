@@ -28,22 +28,11 @@ jobs:
         # make sure it's on PATH as 'python3'
         - ln -s /c/Python38/python.exe /c/Python38/python3.exe
 
-cache: pip
-
 install:
-  - travis_retry pip install --upgrade pip setuptools wheel
-  - travis_retry pip install -r requirements.txt -r requirements-test.txt
-  - travis_retry pip install cibuildwheel
+  - python3 -m pip install cibuildwheel==2.11.3
 
 script:
-  - pip install -e .
-  - python -m pytest --randomly-seed=42 --randomly-dont-reorganize --cov=pyFlowSOM --pycodestyle pyFlowSOM
-  - git clean -fdx
-  - python -m cibuildwheel --output-dir wheelhouse
-  - ls -al wheelhouse
+  - python3 -m cibuildwheel --output-dir dist
 
 after_failure:
   - cat out.log
-
-after_success:
-  - coveralls

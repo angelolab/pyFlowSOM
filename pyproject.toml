@@ -1,3 +1,7 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["setuptools", "numpy>=1,<2", "Cython>=0.29,<1"]
+requires = ["setuptools", "wheel", "numpy>=1,<2", "Cython>=0.29,<1"]
+
+[tool.cibuildwheel]
+test-command = "pytest"
+test-requires = ["pytest", "pandas"]
