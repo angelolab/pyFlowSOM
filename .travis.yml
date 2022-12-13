@@ -1,16 +1,19 @@
-dist: xenial
-language: python
-python:
-  - 3.8
-
 git:
   depth: false
 
 jobs:
   include:
-    - services: docker
-    - services: docker
+    - os: linux
+      dist: xenial
+      services: docker
+      language: python
+      python: "3.9"
+    - os: linux
+      dist: xenial
       arch: arm64
+      services: docker
+      language: python
+      python: "3.9"
     - os: windows
       language: shell
       before_install:
