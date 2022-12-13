@@ -109,18 +109,24 @@ def som(
 
     if not data.flags['F_CONTIGUOUS']:
         data = np.asfortranarray(data)
+
+    assert data.dtype == np.dtype("d")
     cdef double[::1,:] data_mv = data
     cdef Py_ssize_t data_rows = data.shape[0]
     cdef Py_ssize_t data_cols = data.shape[1]
 
     if not nodes.flags['F_CONTIGUOUS']:
         nodes = np.asfortranarray(nodes)
+
+    assert nodes.dtype == np.dtype("d")
     cdef double[::1,:] nodes_mv = nodes
     cdef Py_ssize_t nodes_rows = nodes.shape[0]
     cdef Py_ssize_t nodes_cols = nodes.shape[1]
 
     if not nhbrdist.flags['F_CONTIGUOUS']:
         nhbrdist = np.asfortranarray(nhbrdist)
+
+    assert nhbrdist.dtype == np.dtype("d")
     cdef double[::1,:] nhbrdist_mv = nhbrdist
 
     if nodes_cols != data_cols:
