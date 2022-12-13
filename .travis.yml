@@ -38,7 +38,7 @@ deploy:
   edge: true
   cleanup: false
   skip_existing: true
-  distributions: "sdist bdist_wheel"
+  distributions: "sdist"
   username: "$PYPI_USERNAME"
   password: "$PYPI_PASSWORD"
   on:
