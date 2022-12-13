@@ -35,5 +35,4 @@ deploy:
   username: "$PYPI_USERNAME"
   on:
     tags: true
-  password:
-    secure: "$PYPI_PASSWORD"
+  password: "$PYPI_PASSWORD"
