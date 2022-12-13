@@ -35,9 +35,11 @@ after_failure:
 before_deploy: "python3 -m pip install -r requirements.txt -r requirements-test.txt"
 deploy:
   provider: pypi
-  username: "$PYPI_USERNAME"
-  skip_cleanup: true
+  edge: true
+  cleanup: false
   skip_existing: true
+  distributions: "sdist bdist_wheel"
+  username: "$PYPI_USERNAME"
+  password: "$PYPI_PASSWORD"
   on:
     tags: true
-  password: "$PYPI_PASSWORD"
