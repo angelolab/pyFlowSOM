@@ -49,3 +49,7 @@ Continually build and test while developing. This will automatically create your
 The C code (`pyFlowSOM/flosom.c`) is wrapped using Cython (`pyFlowSOM/cyFlowSOM.c`).
 
 Tests do an approximate exact comparison to cluster id groundtruth and an approximate comparison to node values only because of floating point differences. All randomness has stubbed out in in the y2kbugger/FlowSOM fork and works in tandem to the `deterministic` flag to the `som` function.
+
+To regenerate test data, which may be required if you changed any sources of randomness:
+
+    python -m pyFlowSOM.generate_test_outputs
