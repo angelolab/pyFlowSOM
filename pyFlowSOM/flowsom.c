@@ -3,10 +3,25 @@
 #include <float.h>
 #include <math.h>
 
-#define RANDIN  srand(42)
-#define UNIF (rand() / (RAND_MAX + 1.0))
+#define C_RAND_MAX 32767
+
+#define UNIF (C_RAND() / (C_RAND_MAX + 1.0))
 
 #define EPS 1e-4                /* relative test of equality of distances */
+
+
+static unsigned int C_SEED = 3459173429;
+
+void C_SEED_RAND(unsigned int seed) {
+    C_SEED = seed;
+}
+
+int C_RAND()
+{
+    C_SEED = C_SEED * 1103515245 + 12345;
+    return ((C_SEED / 65536) % (C_RAND_MAX+1));
+}
+
 
 double eucl(double * p1, double * p2, int px, int n, int n_nodes){
     int j;
@@ -87,7 +102,6 @@ void C_SOM(
         distf = &eucl;
     }
 
-    RANDIN;
     niter = rlen * n;
     threshold = radius_start;
     thresholdStep = (radius_start - radius_end) / (double) niter;

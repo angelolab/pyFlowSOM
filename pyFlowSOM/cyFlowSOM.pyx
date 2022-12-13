@@ -1,4 +1,5 @@
 cdef extern from "flowsom.c":
+    void C_SEED_RAND(unsigned int seed)
     void C_SOM(
         double *data,
         double *nodes,
@@ -140,6 +141,9 @@ def som(
 
     xDists = np.zeros(n_nodes, dtype=np.dtype("d"))
     cdef double [:] xDists_mv = xDists
+
+    if deterministic == True:
+        C_SEED_RAND(2407230991)
 
     C_SOM(
         &data_mv[0, 0],
