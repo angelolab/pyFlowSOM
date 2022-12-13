@@ -7,32 +7,38 @@ Python runner for the [FlowSOM](https://github.com/SofieVG/FlowSOM) library.
 
 Basic usage:
 
-```
-from pyFlowSOM import map_data_to_nodes, som
+    import pandas as pd
+    from pyFlowSOM import map_data_to_nodes, som
 
-df = pd.read_csv('example_som_input.csv')
-example_som_input_arr = df.to_numpy()
-node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10)
-clusters, dists = map_data_to_nodes(node_output, example_som_input)
-```
+    df = pd.read_csv('examples/example_som_input.csv')
+    example_som_input_arr = df.to_numpy()
+    node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10)
+    clusters, dists = map_data_to_nodes(node_output, example_som_input_arr)
+
+To put the data back into dataframes:
+
+    eno = pd.DataFrame(data=node_output, columns=df.columns)
+    eco = pd.DataFrame(data=clusters, columns=["cluster"])
+
+To export to csv:
+
+    eno.to_csv('examples/example_node_output.csv', index=False)
+    eco.to_csv('examples/example_clusters_output.csv', index=False)
 
 To plot the output as a heatmap:
 
-```
-import seaborn as sns
+    import seaborn as sns
 
-# Append results to the input data
-example_som_input_df['cluster'] = clusters
+    # Append results to the input data
+    example_som_input_df['cluster'] = clusters
 
-# Find mean of each cluster
-df_mean = example_som_input_df.groupby(['cluster']).mean()
+    # Find mean of each cluster
+    df_mean = example_som_input_df.groupby(['cluster']).mean()
 
-# Make heatmap
-sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
-sns_plot.figure.savefig(f"example_cluster_heatmap.png")
+    # Make heatmap
+    sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
+    sns_plot.figure.savefig(f"example_cluster_heatmap.png")
 
-
-```
 
 # Develop
 
