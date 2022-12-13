@@ -26,20 +26,17 @@ install:
   - python3 -m pip install cibuildwheel==2.11.3
 
 script:
+  - python3 setup.py sdist --dist-dir dist
   - python3 -m cibuildwheel --output-dir dist
 
 after_failure:
   - cat out.log
 
 # deploy to PyPI on tags
-before_deploy: "python3 -m pip install -r requirements.txt -r requirements-test.txt"
+before_deploy: "python3 -m pip install twine"
 deploy:
-  provider: pypi
-  edge: true
+  provider: script
+  script: twine upload --skip-existing dist/* -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD"
   cleanup: false
-  skip_existing: true
-  distributions: "sdist"
-  username: "$PYPI_USERNAME"
-  password: "$PYPI_PASSWORD"
   on:
     tags: true
