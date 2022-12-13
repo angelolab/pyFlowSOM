@@ -3,8 +3,6 @@ from os import pardir, path
 from Cython.Build import cythonize
 from setuptools import Extension, setup
 
-VERSION = '0.1.0'
-
 PKG_FOLDER = path.abspath(path.join(__file__, pardir))
 
 def read_reqs(filename):
@@ -17,7 +15,8 @@ with open(path.join(PKG_FOLDER, 'README.md')) as f:
 
 setup(
     name='pyFlowSOM',
-    version=VERSION,
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     packages=['pyFlowSOM'],
     python_requires=">=3.8",
     ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
@@ -25,7 +24,6 @@ setup(
     description='A Python implementation of the SOM training functionality of FlowSOM',
     author='Angelo Lab',
     url='https://github.com/angelolab/pyFlowSOM',
-    download_url='https://github.com/angelolab/pyFlowSOM/archive/v{}.tar.gz'.format(VERSION),
     install_requires=read_reqs('requirements.txt'),
     extras_require={
         'tests': read_reqs('requirements-test.txt')
