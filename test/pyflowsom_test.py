@@ -98,36 +98,3 @@ def test_som_and_map_end_to_end_and_check_clusters(example_som_input, example_cl
 
     assert example_cluster_groundtruth.shape == clusters.shape
     np.testing.assert_array_equal(example_cluster_groundtruth, clusters)
-
-
-def save_heatmap(cluster_labeled_input_data, output_name):
-    """Save a heatmap of the cluster assignments
-    cluster: 1D array of cluster assignments
-    data: 2D array of data
-    output_name: name of the output file
-    """
-    import seaborn as sns
-
-    # Find mean of each cluster
-    df_mean = cluster_labeled_input_data.groupby(['cluster']).mean()
-
-    # Make heatmap
-    sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
-    sns_plot.figure.savefig(EX_DIR / f"{output_name}.png")
-
-
-@pytest.mark.skip("This is a manual test for visual inspection")
-def test_debug_out_heatmap_comparison(
-        example_som_input,
-        example_som_input_df,
-        example_cluster_groundtruth):
-
-    # Run the SOM
-    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10, deterministic=True)
-    end_to_end_cluster, dists = map_data_to_nodes(node_output, example_som_input)
-
-    example_som_input_df['cluster'] = end_to_end_cluster
-    save_heatmap(example_som_input_df, 'end_to_end')
-
-    example_som_input_df['cluster'] = example_cluster_groundtruth
-    save_heatmap(example_som_input_df, 'ground_truth')

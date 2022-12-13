@@ -53,3 +53,7 @@ Tests do an approximate exact comparison to cluster id groundtruth and an approx
 To regenerate test data, which may be required if you changed any sources of randomness:
 
     python -m pyFlowSOM.generate_test_outputs
+
+To generate heatmaps for manual comparison:
+
+    python -m pyFlowSOM.generate_test_heatmaps
