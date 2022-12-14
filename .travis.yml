@@ -3,7 +3,8 @@ git:
 
 jobs:
   include:
-    - os: linux
+    - name: Source distribution
+      os: linux
       dist: xenial
       services: docker
       language: python
@@ -12,18 +13,21 @@ jobs:
         - python3 -m pip install setuptools 'Cython>=0.29,<1'
       script:
         - python3 setup.py sdist --dist-dir dist
-    - os: linux
+    - name: Linux x86_64 Wheels
+      os: linux
       dist: xenial
       services: docker
       language: python
       python: "3.9"
-    - os: linux
+    - name: Linux aarch64 Wheels
+      os: linux
       dist: xenial
       arch: arm64
       services: docker
       language: python
       python: "3.9"
-    - os: windows
+    - name: Windows amd64 Wheels
+      os: windows
       language: shell
       before_install:
         - choco upgrade python -y --version 3.8.6
