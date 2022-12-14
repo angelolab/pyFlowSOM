@@ -8,6 +8,15 @@ jobs:
       services: docker
       language: python
       python: "3.9"
+      install:
+        - python3 -m pip install setuptools 'Cython>=0.29,<1'
+      script:
+        - python3 setup.py sdist --dist-dir dist
+    - os: linux
+      dist: xenial
+      services: docker
+      language: python
+      python: "3.9"
     - os: linux
       dist: xenial
       arch: arm64
@@ -23,21 +32,17 @@ jobs:
         - ln -s /c/Python38/python.exe /c/Python38/python3.exe
 
 install:
-  - python3 -m pip install cibuildwheel==2.11.3 setuptools 'Cython>=0.29,<1'
+  - python3 -m pip install cibuildwheel==2.11.3
 
 script:
-  - python3 setup.py sdist --dist-dir dist
   - python3 -m cibuildwheel --output-dir dist
-
-after_failure:
-  - cat out.log
 
 # deploy to PyPI on tags
 before_deploy: "python3 -m pip install twine"
 deploy:
   provider: script
   edge: true
-  script: twine upload --skip-existing dist/* -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD"
+  script: twine upload dist/* -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD"
   cleanup: false
   on:
     tags: true
