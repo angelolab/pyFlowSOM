@@ -36,6 +36,7 @@ after_failure:
 before_deploy: "python3 -m pip install twine"
 deploy:
   provider: script
+  edge: true
   script: twine upload --skip-existing dist/* -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD"
   cleanup: false
   on:
