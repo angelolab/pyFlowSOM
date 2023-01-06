@@ -109,8 +109,7 @@ void C_SOM(
 
 
     for (k = 0; k < niter; k++) {
-
-        if(k%n == 0){
+        if(fmod(k, n) == 0){
             if(change < 1){
                 k = niter;
             }
