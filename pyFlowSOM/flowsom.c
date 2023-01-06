@@ -85,8 +85,8 @@ void C_SOM(
     int dist
     )
 {
-    int cd, i, j, k, nearest, niter;
-    double tmp, threshold, alpha, thresholdStep;
+    int cd, i, j, nearest;
+    double niter, k, tmp, threshold, alpha, thresholdStep;
     double change;
     double (*distf)(double*,double*,int,int,int);
 
