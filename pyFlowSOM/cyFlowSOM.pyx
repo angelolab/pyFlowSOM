@@ -142,7 +142,7 @@ def som(
     xDists = np.zeros(n_nodes, dtype=np.dtype("d"))
     cdef double [:] xDists_mv = xDists
 
-    if deterministic == True:
+    if seed is not None:
         C_SEED_RAND(2407230991)
 
     C_SOM(
