@@ -85,8 +85,8 @@ void C_SOM(
     int dist
     )
 {
-    int cd, i, j, k, nearest, niter;
-    double tmp, threshold, alpha, thresholdStep;
+    int cd, i, j, nearest;
+    double niter, k, tmp, threshold, alpha, thresholdStep;
     double change;
     double (*distf)(double*,double*,int,int,int);
 
@@ -109,8 +109,7 @@ void C_SOM(
 
 
     for (k = 0; k < niter; k++) {
-
-        if(k%n == 0){
+        if(fmod(k, n) == 0){
             if(change < 1){
                 k = niter;
             }
