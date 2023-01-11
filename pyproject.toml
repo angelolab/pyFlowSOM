@@ -3,7 +3,16 @@ requires = ["setuptools", "wheel", "numpy>=1,<2", "Cython>=0.29,<1"]
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* pp* *_ppc64le *_i686 *_s390x *-musllinux* *-win32"
+skip = [
+    "cp36-*", # Python 3.6
+    "cp37-*", # Python 3.7
+    "pp*", # PyPy wheels on all platforms
+    "*_i686", # 32bit Linux Wheels
+    "*_s390x",
+    "*-musllinux*",
+    "*-win32", # 32bit Windows Wheels
+    "*_ppc64le",
+]
 test-command = "pytest {project}/test"
 test-requires = ["pytest", "pandas"]
 build-frontend = "build"
@@ -22,4 +31,4 @@ archs = ["x86_64", "universal2", "arm64"]
 
 
 [tool.cibuildwheel.windows]
-archs = ["amd64", "arm64"]
+archs = ["auto", "arm64"]
