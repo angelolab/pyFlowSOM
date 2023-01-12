@@ -24,6 +24,7 @@ build-verbosity = 3
 
 # Avoid testing on emulated architectures
 test-skip = [
+    "*-win_arm64",               # Skip testing emulated arm64 biulds on Windows
     "*-*linux_{aarch64}",        # Skip testing emulated Linux builds
     "*-macosx_arm64",            # Skip testing emulated arm64 builds on Intel Macs
     "*-macosx_universal2:arm64", # Skip testing emulated arm64 portion of universal2 builds
