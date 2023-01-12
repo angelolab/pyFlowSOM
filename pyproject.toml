@@ -1,9 +1,50 @@
 [build-system]
-build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "numpy>=1,<2", "Cython>=0.29,<1"]
+build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* pp* *_ppc64le *_i686 *_s390x *-musllinux* *-win32"
-test-command = "pytest {project}/test"
-test-requires = ["pytest", "pandas"]
+skip = [
+    "cp36-*",       # Python 3.6
+    "cp37-*",       # Python 3.7
+    "cp39-*",       # Python 3.9
+    "cp310-*",      # Python 3.10
+    "cp311-*",      # Python 3.11
+    "pp*",          # PyPy wheels on all platforms
+    "*_i686",       # 32bit Linux Wheels
+    "*_s390x",
+    "*-musllinux*",
+    "*-win32",      # 32bit Windows Wheels
+    "*_ppc64le",
+]
+# Do not test for now
+# test-command = "pytest {project}/test"
+# test-requires = ["pytest", "pandas"]
+build-frontend = "build"
 build-verbosity = 3
+
+# Avoid testing on emulated architectures
+test-skip = [
+    "*-win_arm64",               # Skip testing emulated arm64 biulds on Windows
+    "*-*linux_{aarch64}",        # Skip testing emulated Linux builds
+    "*-macosx_arm64",            # Skip testing emulated arm64 builds on Intel Macs
+    "*-macosx_universal2:arm64", # Skip testing emulated arm64 portion of universal2 builds
+]
+
+
+# On an Linux Intel runner with qemu installed, build Intel and ARM wheels
+[tool.cibuildwheel.linux]
+archs = ["x86_64", "aarch64"]
+repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
+
+# Build `universal2` and `arm64` wheels on an Intel runner.
+# Note that the `arm64` wheel and the `arm64` part of the `universal2` wheel cannot be tested in this configuration.
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64", "universal2"]
+repair-wheel-command = "delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
+
+# Build for Windows x86_64, and ARM 64
+[tool.cibuildwheel.windows]
+archs = ["AMD64", "ARM64"]
+# might not need to repair delvewheel?
+# before-build = "pip install delvewheel"                          # Use delvewheel on windows
+# repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
