@@ -34,11 +34,6 @@ test-skip = [
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 
-# "musllinux" versioning
-# Build using the musllinux_1_1 image
-musllinux-x86_64-image = "musllinux_1_1"
-musllinux-aarch64-image = "musllinux_1_1"
-
 
 # On an Linux Intel runner with qemu installed, build Intel and ARM wheels
 [tool.cibuildwheel.linux]
