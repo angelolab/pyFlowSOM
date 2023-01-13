@@ -4,17 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
 skip = [
-    "cp36-*",    # Python 3.6
-    "cp37-*",    # Python 3.7
-    "cp39-*",    # Python 3.9
-    "cp310-*",   # Python 3.10
-    "cp311-*",   # Python 3.11
-    "*-musllinux-*",
-    "pp*",       # PyPy wheels on all platforms
-    "*_i686",    # 32bit Linux Wheels
-    "*_s390x",   # IBM System/390, "mainframe"
-    "*-win32",   # 32bit Windows Wheels
-    "*_ppc64le", # PowerPC
+    "cp36-*",        # Python 3.6
+    "cp37-*",        # Python 3.7
+    "cp39-*",        # Python 3.9
+    "cp310-*",       # Python 3.10
+    "cp311-*",       # Python 3.11
+    "*-musllinux-*", # Musllinux
+    "pp*",           # PyPy wheels on all platforms
+    "*_i686",        # 32bit Linux Wheels
+    "*_s390x",       # IBM System/390, "mainframe"
+    "*-win32",       # 32bit Windows Wheels
+    "*_ppc64le",     # PowerPC
 ]
 # Do not test for now
 # test-command = "pytest {project}/test"
@@ -25,7 +25,7 @@ build-verbosity = 3
 # Avoid testing on emulated architectures
 test-skip = [
     "*-win_arm64",               # Skip testing emulated arm64 biulds on Windows
-    "*-*linux_{aarch64}",        # Skip testing emulated Linux builds
+    "*-*linux_aarch64",        # Skip testing emulated Linux builds
     "*-macosx_arm64",            # Skip testing emulated arm64 builds on Intel Macs
     "*-macosx_universal2:arm64", # Skip testing emulated arm64 portion of universal2 builds
 ]
