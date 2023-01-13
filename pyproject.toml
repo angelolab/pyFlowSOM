@@ -9,7 +9,7 @@ skip = [
     "cp39-*",        # Python 3.9
     "cp310-*",       # Python 3.10
     "cp311-*",       # Python 3.11
-    "*-musllinux-*", # Musllinux
+    "*-musllinux_*", # Musllinux
     "pp*",           # PyPy wheels on all platforms
     "*_i686",        # 32bit Linux Wheels
     "*_s390x",       # IBM System/390, "mainframe"
