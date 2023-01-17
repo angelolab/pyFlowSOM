@@ -39,7 +39,7 @@ if __name__ == "__main__":
             usecols=["cluster"], dtype=np.dtype("i"))
     example_cluster_groundtruth_arr = example_cluster_groundtruth_df['cluster'].to_numpy(copy=True)
 
-    node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10, deterministic=True)
+    node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10)
     end_to_end_cluster, dists = map_data_to_nodes(node_output, example_som_input_arr)
 
     example_som_input_df['cluster'] = end_to_end_cluster

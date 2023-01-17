@@ -90,7 +90,8 @@ def som(
         Scale parameters columns of input data an importance weight
         shape = (parameter_count,)
     seed : int
-        The random seed to use for node initialization, ignored if nodes is None
+        The random seed to use for node initialization, ignored if nodes is None.
+        If None, runs with fully stochastic node initialization.
 
     Returns
     -------

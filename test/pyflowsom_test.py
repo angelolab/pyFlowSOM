@@ -85,7 +85,7 @@ def test_map_data_to_nodes_handles_c_continuous_arrays(
 
 
 def test_som_and_check_node_output(example_som_input, example_node_output):
-    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10, deterministic=True)
+    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
 
     assert node_output.shape == (100, 16)
     assert example_node_output.shape == (100, 16)
@@ -93,7 +93,7 @@ def test_som_and_check_node_output(example_som_input, example_node_output):
 
 
 def test_som_and_map_end_to_end_and_check_clusters(example_som_input, example_cluster_groundtruth):
-    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10, deterministic=True)
+    node_output = som(example_som_input, xdim=10, ydim=10, rlen=10)
     clusters, dists = map_data_to_nodes(node_output, example_som_input)
 
     assert example_cluster_groundtruth.shape == clusters.shape
