@@ -2,8 +2,7 @@ name: Wheel Bulder
 
 on:
   push:
-    branches:
-      - "main"
+    branches: ["main"]
   pull_request:
     types: [labeled, opened, synchronize, reopened]
   workflow_dispatch:
@@ -39,12 +38,63 @@ jobs:
 
       - name: Build Wheels
         uses: pypa/cibuildwheel@v2.11.4
-        # with:
-        #   package-dir: .
-        #   output-dir: wheelhouse
-        #   config-file: "{package}/pyproject.toml"
 
-      - name: Store Artifacts
+      - name: Store Wheel Artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: ./wheelhouse/*.whl
+          name: distributions
+          path: ./dist/*.whl
+
+  build_sdist:
+    name: Build Source Distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build sdist
+        run: pipx run build --sdist
+
+      - name: Check sdist Metadata
+        run: pipx run twine check dist/*
+
+      - name: Store sdist Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: distributions
+          path: ./dist/*.tar.gz
+
+  test_pypi_publish:
+    # Test PyPI publish, requires wheels and source dist (sdist)
+    name: Publish package to TestPyPI
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: distributions
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@release/v1.6
+        with:
+          user: ${{ secrets.TEST_PYPI_USERNAME }}
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+
+  pypi_publish:
+    name: Publish a package to PYPI
+    needs: [build_wheels, build_sdist, test_pypi_publish]
+
+    runs-on: ubuntu-latest
+    # Publish when a GitHub Release is created, use the following rule:
+    if: github.event_name == 'release' && github.event.action == 'published'
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: distributions
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@release/v1.6
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}

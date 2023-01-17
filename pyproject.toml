@@ -3,6 +3,9 @@ requires = ["setuptools", "wheel", "numpy>=1,<2", "Cython>=0.29,<1"]
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
+build = [
+    "cp38-*"
+]
 skip = [
     "cp36-*",        # Python 3.6
     "cp37-*",        # Python 3.7
@@ -25,7 +28,7 @@ build-verbosity = 3
 # Avoid testing on emulated architectures
 test-skip = [
     "*-win_arm64",               # Skip testing emulated arm64 biulds on Windows
-    "*-*linux_aarch64",        # Skip testing emulated Linux builds
+    "*-*linux_aarch64",          # Skip testing emulated Linux builds
     "*-macosx_arm64",            # Skip testing emulated arm64 builds on Intel Macs
     "*-macosx_universal2:arm64", # Skip testing emulated arm64 portion of universal2 builds
 ]
