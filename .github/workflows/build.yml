@@ -86,7 +86,7 @@ jobs:
           repository_url: https://test.pypi.org/legacy/
 
   pypi_publish:
-    name: Publish a package to PYPI
+    name: Publish a package to PyPI
     needs: [build_wheels, build_sdist, test_pypi_publish]
 
     runs-on: ubuntu-latest
