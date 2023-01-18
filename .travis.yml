@@ -8,7 +8,7 @@ jobs:
       dist: xenial
       services: docker
       language: python
-      python: "3.8"
+      python: "3.9"
       install:
         - python3 -m pip install setuptools 'Cython>=0.29,<1'
       script:
@@ -18,14 +18,14 @@ jobs:
       dist: xenial
       services: docker
       language: python
-      python: "3.8"
+      python: "3.9"
     - name: Linux aarch64 Wheels
       os: linux
       dist: xenial
       arch: arm64
       services: docker
       language: python
-      python: "3.8"
+      python: "3.9"
     - name: Windows amd64 Wheels
       os: windows
       language: shell
