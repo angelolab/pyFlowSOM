@@ -38,12 +38,16 @@ jobs:
 
       - name: Build Wheels
         uses: pypa/cibuildwheel@v2.11.4
+        with:
+          package-dir: .
+          output-dir: wheelhouse
+          config-file: "{package}/pyproject.toml"
 
       - name: Store Wheel Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: distributions
-          path: dist/*.whl
+          path: wheelhouse/*.whl
 
   build_sdist:
     name: Build Source Distribution
