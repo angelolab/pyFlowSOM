@@ -1,4 +1,4 @@
-name: Wheel Bulder
+name: Wheel Builder
 
 on:
   push:
@@ -85,6 +85,7 @@ jobs:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
           packages_dir: dist/
+          verbose: true
 
   pypi_publish:
     name: Publish ${{ github.repository }} to PyPI
