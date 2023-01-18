@@ -15,8 +15,8 @@ with open(path.join(PKG_FOLDER, 'README.md')) as f:
 
 setup(
     name='pyFlowSOM',
-    use_scm_version=True,
-    setup_requires=['setuptools_scm'],
+    # use_scm_version=True,
+    # setup_requires=['setuptools_scm'],
     packages=['pyFlowSOM'],
     python_requires=">=3.8",
     ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
