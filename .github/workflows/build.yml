@@ -11,12 +11,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+env:
+  GH_REPO: ${{ github.repository }}
+
 permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build $GH_REPO wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       # Ensure that a wheel builder finishes even if another fails
@@ -25,7 +28,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-12]
 
     steps:
-      - name: Checkout ${{ github.repository }}
+      - name: Checkout $GH_REPO
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -50,7 +53,7 @@ jobs:
           path: wheelhouse/*.whl
 
   build_sdist:
-    name: Build Source Distribution
+    name: Build $GH_REPO Source Distribution
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -69,7 +72,7 @@ jobs:
 
   test_pypi_publish:
     # Test PyPI publish, requires wheels and source dist (sdist)
-    name: Publish ${{ github.repository }} to TestPyPI
+    name: Publish $GH_REPO to TestPyPI
     if: github.event_name == 'release' && github.event.action == 'published'
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
@@ -87,7 +90,7 @@ jobs:
           packages_dir: dist/
 
   pypi_publish:
-    name: Publish ${{ github.repository }} to to PyPI
+    name: Publish $GH_REPO to to PyPI
     needs: [build_wheels, build_sdist, test_pypi_publish]
 
     runs-on: ubuntu-latest
