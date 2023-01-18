@@ -69,7 +69,7 @@ jobs:
 
   test_pypi_publish:
     # Test PyPI publish, requires wheels and source dist (sdist)
-    name: Publish package to TestPyPI
+    name: Publish ${{ github.repository }} to TestPyPI
     # if: github.event_name == 'release' && github.event.action == 'published'
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
@@ -81,12 +81,13 @@ jobs:
 
       - uses: pypa/gh-action-pypi-publish@release/v1.6
         with:
+          user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
           packages_dir: dist/
 
   pypi_publish:
-    name: Publish a package to PyPI
+    name: Publish ${{ github.repository }} to PyPI
     needs: [build_wheels, build_sdist, test_pypi_publish]
 
     runs-on: ubuntu-latest
