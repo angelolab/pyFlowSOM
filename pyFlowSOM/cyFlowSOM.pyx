@@ -144,7 +144,7 @@ def som(
     cdef double [:] xDists_mv = xDists
 
     if seed is not None:
-        C_SEED_RAND(2407230991)
+        C_SEED_RAND(seed)
 
     C_SOM(
         &data_mv[0, 0],
