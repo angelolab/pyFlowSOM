@@ -1,5 +1,6 @@
-[project]
-dynamic = ["version"]
+# [project]
+# name = 
+# dynamic = ["version"]
 
 [build-system]
 requires = ["setuptools", "wheel", "numpy>=1,<2", "Cython>=0.29,<1"]
