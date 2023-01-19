@@ -5,6 +5,8 @@ on:
     branches: ["main"]
   pull_request:
     types: [labeled, opened, synchronize, reopened]
+  release:
+    types: [created]
   workflow_dispatch:
 
 concurrency:
@@ -53,7 +55,8 @@ jobs:
     name: Build ${{ github.repository }} Source Distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
 
       - name: Build sdist
         run: pipx run build --sdist
@@ -94,12 +97,14 @@ jobs:
     # Publish when a GitHub Release is created, use the following rule:
     if: github.event_name == 'release' && github.event.action == 'published'
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
         with:
           name: distributions
           path: dist
 
-      - uses: pypa/gh-action-pypi-publish@release/v1.6
+      - name: PYPI Publish
+        uses: pypa/gh-action-pypi-publish@release/v1.6
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
