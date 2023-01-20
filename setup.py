@@ -14,7 +14,7 @@ with open(path.join(PKG_FOLDER, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
+    ext_modules = cythonize('src/pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
     extras_require={
         'tests': read_reqs('requirements-test.txt')
     },
