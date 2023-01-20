@@ -24,7 +24,8 @@ skip = [
     "*-win32",       # 32bit Windows Wheels
     "*_ppc64le",     # PowerPC
 ]
-# Do not test for now
+
+# Run tests
 test-command = "pytest {project}/test"
 test-requires = [
     "pytest",
@@ -74,6 +75,7 @@ archs = ["AMD64", "ARM64"]
 # repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
 
 
+# Pytest Options
 [tool.pytest.ini_options]
 filterwarnings = [
     "ignore::DeprecationWarning",
