@@ -24,7 +24,7 @@ classifiers = [
 
 ]
 dynamic = ["version"]
-urls = [{ repository = "https://github.com/angelolab/pyFlowSOM" }]
+urls = { repository = "https://github.com/angelolab/pyFlowSOM" }
 
 
 [tool.cibuildwheel]
