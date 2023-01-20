@@ -4,11 +4,11 @@ requires = [
     "wheel",
     "numpy>=1,<2",
     "Cython>=0.29,<1",
-    "setuptools_scm[toml]>=6.2",
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
+dependencies = ["Cython>=0.29,<1", "numpy>=1,<2", "scipy>=1,<2"]
 name = "pyFlowSOM"
 authors = [{ name = "Angelo Lab", email = "theangelolab@gmail.com" }]
 description = "A Python implementation of the SOM training functionality of FlowSOM"
@@ -23,9 +23,8 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 
 ]
-dynamic = ["version"]
+version = "0.1.13"
 urls = { repository = "https://github.com/angelolab/pyFlowSOM" }
-
 
 [tool.cibuildwheel]
 build = ["cp38-*"]
