@@ -8,6 +8,24 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "pyFlowSOM"
+authors = [{ name = "Angelo Lab", email = "theangelolab@gmail.com" }]
+description = "A Python implementation of the SOM training functionality of FlowSOM"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Modified Apache License 2.0" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+
+]
+dynamic = ["version"]
+urls = [{ repository = "https://github.com/angelolab/pyFlowSOM" }]
+
 
 [tool.cibuildwheel]
 build = ["cp38-*"]
