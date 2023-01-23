@@ -145,6 +145,8 @@ def som(
 
     if seed is not None:
         C_SEED_RAND(seed)
+    else:
+        C_SEED_RAND(np.random.randint(low=1, high=65535))
 
     C_SOM(
         &data_mv[0, 0],
