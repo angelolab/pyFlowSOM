@@ -14,3 +14,5 @@ build
 **/.token.json
 examples/.RData
 examples/.Rhistory
+
+**/cy*.c
