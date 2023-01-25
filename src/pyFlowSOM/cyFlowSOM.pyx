@@ -55,7 +55,7 @@ def som(
     distf = 2,
     nodes = None,
     importance = None,
-    deterministic = False,
+    seed=42,
     ):
     """
     Build a self-organizing map
@@ -89,6 +89,9 @@ def som(
     importance : np.Typing.NDArray[np.dtype("d")]
         Scale parameters columns of input data an importance weight
         shape = (parameter_count,)
+    seed : int
+        The random seed to use for node initialization, ignored if nodes is None.
+        If None, runs with fully stochastic node initialization.
 
     Returns
     -------
@@ -102,11 +105,9 @@ def som(
 
     n_nodes = xdim * ydim
     if nodes is None:
-        # If we don't supply nodes, we randomly sample them from the data
-        if deterministic == True:
-            nodes = data[0: xdim * ydim, :]
-        else:
-            nodes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
+        # If we don't supply nodes, then initialize a seed and randomly sample xdim * ydim rows
+        np.random.seed(seed)
+        nodes = data[np.random.choice(data.shape[0], xdim * ydim, replace=False), :]
 
     if not data.flags['F_CONTIGUOUS']:
         data = np.asfortranarray(data)
@@ -142,8 +143,10 @@ def som(
     xDists = np.zeros(n_nodes, dtype=np.dtype("d"))
     cdef double [:] xDists_mv = xDists
 
-    if deterministic == True:
-        C_SEED_RAND(2407230991)
+    if seed is not None:
+        C_SEED_RAND(seed)
+    else:
+        C_SEED_RAND(np.random.randint(low=1, high=65535))
 
     C_SOM(
         &data_mv[0, 0],
