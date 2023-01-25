@@ -14,24 +14,8 @@ with open(path.join(PKG_FOLDER, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='pyFlowSOM',
-    use_scm_version=True,
-    setup_requires=['setuptools_scm'],
-    packages=['pyFlowSOM'],
-    python_requires=">=3.8",
-    ext_modules = cythonize('pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
-    license='Modified Apache License 2.0',
-    description='A Python implementation of the SOM training functionality of FlowSOM',
-    author='Angelo Lab',
-    url='https://github.com/angelolab/pyFlowSOM',
-    install_requires=read_reqs('requirements.txt'),
+    ext_modules = cythonize('src/pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
     extras_require={
         'tests': read_reqs('requirements-test.txt')
     },
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    classifiers=['License :: OSI Approved :: Apache Software License',
-                 'Development Status :: 4 - Beta',
-                 'Programming Language :: Python :: 3',
-                 'Programming Language :: Python :: 3.8']
 )
