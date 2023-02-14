@@ -23,7 +23,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 
 ]
-version = "0.1.13"
+version = "0.1.14"
 urls = { repository = "https://github.com/angelolab/pyFlowSOM" }
 
 [tool.cibuildwheel]

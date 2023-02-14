@@ -62,5 +62,5 @@ To bump the version and deploy to pypi:
 
 Just add the tag which matches the version you want to deploy:
 
-    git tag v0.1.4
+    git tag v0.1.14
     git push --tags
