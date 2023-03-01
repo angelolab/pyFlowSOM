@@ -16,7 +16,8 @@ def example_som_input_df():
 
     Returns the df with marker names
     """
-    return pd.read_csv(EX_DIR / 'example_som_input.csv', dtype=np.dtype("d"))
+    np.random.seed(42)
+    return pd.DataFrame(np.random.rand(500, 16))
 
 
 @pytest.fixture()
