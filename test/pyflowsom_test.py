@@ -25,7 +25,7 @@ def example_som_input(example_som_input_df):
     original image could be: 66 x 631 = 41,646
     """
     arr = example_som_input_df.to_numpy(copy=True)
-    assert arr.shape == (41646, 16)
+    assert arr.shape == (500, 16)
     assert arr.dtype == np.dtype("d")
     return arr
 
@@ -59,7 +59,7 @@ def example_cluster_groundtruth_df():
 def example_cluster_groundtruth(example_cluster_groundtruth_df):
     """Each row is a cluster, each column is a marker"""
     arr = example_cluster_groundtruth_df['cluster'].to_numpy(copy=True)
-    assert arr.shape == (41646,)
+    assert arr.shape == (500,)
     assert arr.dtype == np.dtype("i")
     return arr
 
@@ -67,8 +67,8 @@ def example_cluster_groundtruth(example_cluster_groundtruth_df):
 def test_map_data_to_nodes(example_som_input, example_node_output, example_cluster_groundtruth):
     nodes, dists = map_data_to_nodes(example_node_output, example_som_input)
 
-    assert nodes.shape == (41646,)
-    assert dists.shape == (41646,)
+    assert nodes.shape == (500,)
+    assert dists.shape == (500,)
     np.testing.assert_array_equal(example_cluster_groundtruth, nodes)
 
 
@@ -79,8 +79,8 @@ def test_map_data_to_nodes_handles_c_continuous_arrays(
 
     cluster, dists = map_data_to_nodes(example_node_output, example_som_input)
 
-    assert cluster.shape == (41646,)
-    assert dists.shape == (41646,)
+    assert cluster.shape == (500,)
+    assert dists.shape == (500,)
     np.testing.assert_array_equal(example_cluster_groundtruth, cluster)
 
 
