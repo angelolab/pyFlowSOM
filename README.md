@@ -42,9 +42,9 @@ To plot the output as a heatmap:
 
 # Develop
 
-The C code (`pyFlowSOM/flowsom.c`) is wrapped using Cython (`pyFlowSOM/cyFlowSOM.c`).
+The C code (`pyFlowSOM/flowsom.c`) is wrapped using Cython (`pyFlowSOM/cyFlowSOM.cyx`).
 
-Tests do an approximate exact comparison to cluster id groundtruth and an approximate comparison to node values only because of floating point differences. All randomness has stubbed out in in the y2kbugger/FlowSOM fork and works in tandem to the `seed` flag to the `som` function.
+Tests do an approximate exact comparison to cluster id groundtruth and an approximate comparison to node values only because of floating point differences. Randomness works in tandem to the `seed` flag to the `som` function.
 
 To run the tests, use the following command:
 
