@@ -50,14 +50,6 @@ To run the tests, use the following command:
 
     python -m pytest test/pyflowsom_test.py
 
-To regenerate test data, which may be required if you changed any sources of randomness:
-
-    python -m pyFlowSOM.generate_test_outputs
-
-To generate heatmaps for manual comparison:
-
-    python -m pyFlowSOM.generate_test_heatmaps
-
 To bump the version and deploy to pypi:
 
 Just add the tag which matches the version you want to deploy:
