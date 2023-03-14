@@ -10,7 +10,7 @@ Basic usage:
     import pandas as pd
     from pyFlowSOM import map_data_to_nodes, som
 
-    df = pd.read_csv('examples/example_som_input.csv')
+    df = pd.read_csv('path/to/som/input.csv')  # replace this with the path to your SOM input
     example_som_input_arr = df.to_numpy()
     node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10)
     clusters, dists = map_data_to_nodes(node_output, example_som_input_arr)
