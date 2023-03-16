@@ -10,9 +10,18 @@ Basic usage:
     import pandas as pd
     from pyFlowSOM import map_data_to_nodes, som
 
-    df = pd.read_csv('path/to/som/input.csv')  # replace this with the path to your SOM input
+    # generate example input data, rows are observations (e.g. cells), columns are features (e.g. proteins)
+    df = pd.DataFrame(np.random.rand(500, 16))
+    
+    # alternatively, specify path to your own input data
+    df = pd.read_csv('path/to/som/input.csv')
+
     example_som_input_arr = df.to_numpy()
+    
+    # train the SOM
     node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10)
+    
+    # use trainsed SOM to assign clusters to each observation in your data
     clusters, dists = map_data_to_nodes(node_output, example_som_input_arr)
 
 To put the data back into dataframes:
@@ -44,11 +53,11 @@ To plot the output as a heatmap:
 
 The C code (`pyFlowSOM/flowsom.c`) is wrapped using Cython (`pyFlowSOM/cyFlowSOM.cyx`).
 
-Tests do an approximate exact comparison to cluster id groundtruth and an approximate comparison to node values only because of floating point differences. Randomness works in tandem to the `seed` flag to the `som` function.
+Tests do an exact comparison to cluster id groundtruth and an approximate comparison to node values only because of floating point differences. Randomness works in tandem to the `seed` flag to the `som` function.
 
 To run the tests, use the following command:
 
-    python -m pytest test/pyflowsom_test.py
+    python -m pytest test/pyflowsom_test.py --randomly-seed=42  # you can replace the seed with any value of your choosing
 
 To bump the version and deploy to pypi:
 
