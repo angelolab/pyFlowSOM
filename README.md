@@ -22,7 +22,7 @@ Basic usage:
     # train the SOM
     node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10)
     
-    # use trainsed SOM to assign clusters to each observation in your data
+    # use trained SOM to assign clusters to each observation in your data
     clusters, dists = map_data_to_nodes(node_output, example_som_input_arr)
 
 To put the data back into dataframes:
