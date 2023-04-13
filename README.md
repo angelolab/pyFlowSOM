@@ -7,12 +7,22 @@ Python runner for the [FlowSOM](https://github.com/SofieVG/FlowSOM) library.
 
 Basic usage:
 
+    import numpy as np
     import pandas as pd
     from pyFlowSOM import map_data_to_nodes, som
 
-    df = pd.read_csv('examples/example_som_input.csv')
+    # generate example input data, rows are observations (e.g. cells), columns are features (e.g. proteins)
+    df = pd.DataFrame(np.random.rand(500, 16))
+    
+    # alternatively, specify path to your own input data
+    df = pd.read_csv('path/to/som/input.csv')
+
     example_som_input_arr = df.to_numpy()
+    
+    # train the SOM
     node_output = som(example_som_input_arr, xdim=10, ydim=10, rlen=10)
+    
+    # use trained SOM to assign clusters to each observation in your data
     clusters, dists = map_data_to_nodes(node_output, example_som_input_arr)
 
 To put the data back into dataframes:
@@ -30,10 +40,10 @@ To plot the output as a heatmap:
     import seaborn as sns
 
     # Append results to the input data
-    example_som_input_df['cluster'] = clusters
+    df['cluster'] = clusters
 
     # Find mean of each cluster
-    df_mean = example_som_input_df.groupby(['cluster']).mean()
+    df_mean = df.groupby(['cluster']).mean()
 
     # Make heatmap
     sns_plot = sns.clustermap(df_mean, z_score=1, cmap="vlag", center=0, yticklabels=True)
@@ -42,21 +52,13 @@ To plot the output as a heatmap:
 
 # Develop
 
-Continually build and test while developing. This will automatically create your virtual env
+The C code (`pyFlowSOM/flowsom.c`) is wrapped using Cython (`pyFlowSOM/cyFlowSOM.cyx`).
 
-    ./build.sh && ./test.sh
+Tests do an exact comparison to cluster id groundtruth and an approximate comparison to node values only because of floating point differences. Randomness works in tandem to the `seed` flag to the `som` function.
 
-The C code (`pyFlowSOM/flosom.c`) is wrapped using Cython (`pyFlowSOM/cyFlowSOM.c`).
+To run the tests, use the following command:
 
-Tests do an approximate exact comparison to cluster id groundtruth and an approximate comparison to node values only because of floating point differences. All randomness has stubbed out in in the y2kbugger/FlowSOM fork and works in tandem to the `deterministic` flag to the `som` function.
-
-To regenerate test data, which may be required if you changed any sources of randomness:
-
-    python -m pyFlowSOM.generate_test_outputs
-
-To generate heatmaps for manual comparison:
-
-    python -m pyFlowSOM.generate_test_heatmaps
+    python -m pytest test/pyflowsom_test.py --randomly-seed=42  # you can replace the seed with any value of your choosing
 
 To bump the version and deploy to pypi:
 
