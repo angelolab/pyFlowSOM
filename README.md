@@ -1,7 +1,15 @@
-[![Build Status](https://travis-ci.com/angelolab/pyFlowSOM.svg?branch=master)](https://travis-ci.com/angelolab/pyFlowSOM)
-[![Coverage Status](https://coveralls.io/repos/github/angelolab/pyFlowSOM/badge.svg?branch=main)](https://coveralls.io/github/angelolab/pyFlowSOM?branch=main)
-
 # pyFlowSOM
+
+<div align="center">
+
+| | | 
+| ---        |    ---  |
+| CI / CD | [![CI](https://github.com/angelolab/pyFlowSOM/actions/workflows/ci.yml/badge.svg)](https://github.com/angelolab/pyFlowSOM/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/angelolab/pyFlowSOM/badge.svg?branch=main)](https://coveralls.io/github/angelolab/pyFlowSOM?branch=main) |
+| Package | [![PyPI - Version](https://img.shields.io/pypi/v/pyFlowSOM.svg?logo=pypi&label=PyPI&logoColor=gold)](https://pypi.org/project/pyFlowSOM/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/pyFlowSOM.svg?color=blue&label=Downloads&logo=pypi&logoColor=gold)](https://pypi.org/project/pyFlowSOM/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyFlowSOM.svg?logo=python&label=Python&logoColor=gold)](https://pypi.org/project/pyFlowSOM/) |
+|Meta | [![PyPI - License](https://img.shields.io/pypi/l/pyFlowSOM?color=9400d3)](LICENSE) |
+
+</div>
+
 
 Python runner for the [FlowSOM](https://github.com/SofieVG/FlowSOM) library.
 
