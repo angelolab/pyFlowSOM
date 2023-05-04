@@ -37,9 +37,10 @@ jobs:
         run: |
           pytest
 
-      - name: Archive Coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-${{ join(matrix.*, '-') }}
-          path: |
-            coverage.lcov
+      # Skip for now, until we sort out how to get coverage from the running Cython Tests
+      # - name: Archive Coverage
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: coverage-${{ join(matrix.*, '-') }}
+      #     path: |
+      #       coverage.lcov

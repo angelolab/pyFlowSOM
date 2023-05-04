@@ -32,7 +32,6 @@ urls = { repository = "https://github.com/angelolab/pyFlowSOM" }
 
 [project.optional-dependencies]
 test = [
-    "coveralls[toml]",
     "pytest",
     "pytest-cases",
     "pytest-cov",
@@ -99,11 +98,13 @@ archs = ["AMD64", "ARM64"]
 
 # Coverage
 [tool.coverage.paths]
-source = ["src", "*/site-packages"]
+source = ["src", "**/site-packages"]
 
 [tool.coverage.run]
 branch = true
-source = ["mibi_bin_tools"]
+source = ["pyFlowSOM"]
+plugins = ["Cython.Coverage"]
+omit = ["*.pxd"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -125,8 +126,8 @@ addopts = [
     "--durations=20",
     "--randomly-seed=42",
     "--randomly-dont-reorganize",
-    "--cov=pyFlowSOM",
-    "--cov-report=lcov",
+    # "--cov=pyFlowSOM",
+    # "--cov-report=lcov",
     "--pycodestyle",
 ]
 console_output_style = "count"

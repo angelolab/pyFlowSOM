@@ -1,28 +1,32 @@
-from os import path
-
+from pathlib import Path
 from Cython.Build import cythonize
+from Cython.Compiler.Options import get_directive_defaults
 from setuptools import Extension, setup
 
-CYTHON_DEBUG = False
+_compiler_directives = get_directive_defaults()
 
-if CYTHON_DEBUG:
-    from Cython.Compiler.Options import get_directive_defaults
+CYTHON_PROFILE_MODE = False
 
-    directive_defaults = get_directive_defaults()
-    directive_defaults["linetrace"] = True
-    directive_defaults["binding"] = True
+CYTHON_MACROS: tuple[str,str] = None
 
-CYTHON_MACROS = [("CYTHON_TRACE", "1")] if CYTHON_DEBUG else None
+if CYTHON_PROFILE_MODE:
+    _compiler_directives["linetrace"] = True
+    _compiler_directives["profile"] = True
+    _compiler_directives["emit_code_comments"] = True
+    CYTHON_MACROS = [("CYTHON_TRACE", "1")]
 
+_compiler_directives["binding"] = True
+_compiler_directives["language_level"] = "3"
+_compiler_directives["embedsignature"] = True
 
 extensions = [
     Extension(
         name="pyFlowSOM.cyFlowSOM",
-        sources=[path.join("src", "pyFlowSOM", "cyFlowSOM.pyx")],
+        sources=[Path("src", "pyFlowSOM", "cyFlowSOM.pyx").as_posix()],
         define_macros=CYTHON_MACROS,
     )
 ]
 
 setup(
-    ext_modules = cythonize(extensions, compiler_directives={"language_level": "3"}),
+    ext_modules=cythonize(extensions, compiler_directives=_compiler_directives),
 )
