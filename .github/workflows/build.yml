@@ -1,29 +1,20 @@
-name: Wheel Builder
+name: Build
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    types: [labeled, opened, synchronize, reopened]
-  release:
-    types: [published]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+  workflow_call:
 
 permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
   build_wheels:
-    name: Build  ${{ github.repository }} wheels on ${{ matrix.os }}
+    name: ${{ matrix.os }} Wheels
     runs-on: ${{ matrix.os }}
     strategy:
       # Ensure that a wheel builder finishes even if another fails
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-12]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout ${{ github.repository }}
@@ -38,7 +29,7 @@ jobs:
           platforms: arm64
 
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v2.11.4
+        uses: pypa/cibuildwheel@v2.12.3
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -51,7 +42,7 @@ jobs:
           path: wheelhouse/*.whl
 
   build_sdist:
-    name: Build ${{ github.repository }} Source Distribution
+    name: Source Distribution
     runs-on: ubuntu-latest
     steps:
       - name: Checkout ${{ github.repository }}
@@ -68,43 +59,3 @@ jobs:
         with:
           name: distributions
           path: dist/*.tar.gz
-
-  test_pypi_publish:
-    # Test PyPI publish, requires wheels and source dist (sdist)
-    name: Publish ${{ github.repository }} to TestPyPI
-    if: github.event_name == 'release' && github.event.action == 'published'
-    needs: [build_wheels, build_sdist]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: distributions
-          path: dist
-
-      - uses: pypa/gh-action-pypi-publish@release/v1.6
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
-          packages_dir: dist/
-
-  pypi_publish:
-    name: Publish ${{ github.repository }} to to PyPI
-    needs: [build_wheels, build_sdist, test_pypi_publish]
-
-    runs-on: ubuntu-latest
-    # Publish when a GitHub Release is created, use the following rule:
-    if: github.event_name == 'release' && github.event.action == 'published'
-    steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: distributions
-          path: dist
-
-      - name: PYPI Publish
-        uses: pypa/gh-action-pypi-publish@release/v1.6
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          packages_dir: dist/

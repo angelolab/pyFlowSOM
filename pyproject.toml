@@ -4,6 +4,7 @@ requires = [
     "wheel",
     "numpy>=1,<2",
     "Cython>=0.29,<1",
+    "setuptools_scm[toml]>=6.2",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -13,50 +14,54 @@ name = "pyFlowSOM"
 authors = [{ name = "Angelo Lab", email = "theangelolab@gmail.com" }]
 description = "A Python implementation of the SOM training functionality of FlowSOM"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { text = "Modified Apache License 2.0" }
 classifiers = [
     "Development Status :: 4 - Beta",
+    "Programming Language :: Cython",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: Apache Software License",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
-
 ]
-version = "0.1.14"
+
+dynamic = ["version"]
 urls = { repository = "https://github.com/angelolab/pyFlowSOM" }
 
-[tool.cibuildwheel]
-build = ["cp38-*"]
-skip = [
-    "cp36-*",        # Python 3.6
-    "cp37-*",        # Python 3.7
-    "cp39-*",        # Python 3.9
-    "cp310-*",       # Python 3.10
-    "cp311-*",       # Python 3.11
-    "*-musllinux_*", # Musllinux
-    "pp*",           # PyPy wheels on all platforms
-    "*_i686",        # 32bit Linux Wheels
-    "*_s390x",       # IBM System/390, "mainframe"
-    "*-win32",       # 32bit Windows Wheels
-    "*_ppc64le",     # PowerPC
-]
-
-# Run tests
-test-command = "pytest {project}/test"
-test-requires = [
+[project.optional-dependencies]
+test = [
     "pytest",
-    "pandas",
-    "coveralls",
     "pytest-cases",
     "pytest-cov",
     "pytest-mock",
     "pytest-pycodestyle",
     "pytest-randomly",
     "seaborn",
+    "pandas",
 ]
+
+[tool.setuptools_scm]
+version_scheme = "release-branch-semver"
+local_scheme = "no-local-version"
+
+[tool.cibuildwheel]
+build = ["cp39-*", "cp310-*", "cp311-*"]
+skip = [
+    "cp36-*",         # Python 3.6
+    "cp37-*",         # Python 3.7
+    "cp38-*",         # Python 3.8
+    "*-musllinux_*",  # Musllinux
+    "pp*",            # PyPy wheels on all platforms
+    "*_i686",         # 32bit Linux Wheels
+    "*_s390x",        # IBM System/390, "mainframe"
+    "*-win32",        # 32bit Windows Wheels
+    "*_ppc64le",      # PowerPC
+    "cp39-win_arm64", # Windows ARM64 Python 3.9 wheels do not build.
+]
+
 build-frontend = "build"
-build-verbosity = 3
 
 # Avoid testing on emulated architectures
 test-skip = [
@@ -91,6 +96,23 @@ archs = ["AMD64", "ARM64"]
 # before-build = "pip install delvewheel"                          # Use delvewheel on windows
 # repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
 
+# Coverage
+[tool.coverage.paths]
+source = ["src", "**/site-packages"]
+
+[tool.coverage.run]
+branch = true
+source = ["pyFlowSOM"]
+plugins = ["Cython.Coverage"]
+omit = ["*.pxd"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "except ImportError",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "(ArrowInvalid, OSError, IOError)",
+]
 
 # Pytest Options
 [tool.pytest.ini_options]
@@ -104,7 +126,9 @@ addopts = [
     "--durations=20",
     "--randomly-seed=42",
     "--randomly-dont-reorganize",
-    "--cov=pyFlowSOM",
+    # "--cov=pyFlowSOM",
+    # "--cov-report=lcov",
     "--pycodestyle",
 ]
 console_output_style = "count"
+testpaths = ["tests"]

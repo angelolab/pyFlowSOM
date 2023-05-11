@@ -16,3 +16,7 @@ examples/.RData
 examples/.Rhistory
 
 **/cy*.c
+
+.vscode/
+coverage.*
+.coverage

@@ -1,21 +1,32 @@
-from os import pardir, path
-
+from pathlib import Path
 from Cython.Build import cythonize
+from Cython.Compiler.Options import get_directive_defaults
 from setuptools import Extension, setup
 
-PKG_FOLDER = path.abspath(path.join(__file__, pardir))
+_compiler_directives = get_directive_defaults()
 
-def read_reqs(filename):
-    with open(path.join(PKG_FOLDER, filename)) as f:
-        return f.read().splitlines()
+CYTHON_PROFILE_MODE = False
 
-# set a long description which is basically the README
-with open(path.join(PKG_FOLDER, 'README.md')) as f:
-    long_description = f.read()
+CYTHON_MACROS: tuple[str,str] = None
+
+if CYTHON_PROFILE_MODE:
+    _compiler_directives["linetrace"] = True
+    _compiler_directives["profile"] = True
+    _compiler_directives["emit_code_comments"] = True
+    CYTHON_MACROS = [("CYTHON_TRACE", "1")]
+
+_compiler_directives["binding"] = True
+_compiler_directives["language_level"] = "3"
+_compiler_directives["embedsignature"] = True
+
+extensions = [
+    Extension(
+        name="pyFlowSOM.cyFlowSOM",
+        sources=[Path("src", "pyFlowSOM", "cyFlowSOM.pyx").as_posix()],
+        define_macros=CYTHON_MACROS,
+    )
+]
 
 setup(
-    ext_modules = cythonize('src/pyFlowSOM/cyFlowSOM.pyx', language_level="3"),
-    extras_require={
-        'tests': read_reqs('requirements-test.txt')
-    },
+    ext_modules=cythonize(extensions, compiler_directives=_compiler_directives),
 )
