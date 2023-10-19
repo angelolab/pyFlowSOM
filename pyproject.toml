@@ -3,13 +3,13 @@ requires = [
     "setuptools",
     "wheel",
     "numpy>=1,<2",
-    "Cython>=0.29,<1",
-    "setuptools_scm[toml]>=6.2",
+    "Cython>=3",
+    "setuptools_scm[toml]>=8",
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
-dependencies = ["Cython>=0.29,<1", "numpy>=1,<2", "scipy>=1,<2"]
+dependencies = ["Cython>=3", "numpy>=1,<2", "scipy>=1,<2"]
 name = "pyFlowSOM"
 authors = [{ name = "Angelo Lab", email = "theangelolab@gmail.com" }]
 description = "A Python implementation of the SOM training functionality of FlowSOM"
@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: Apache Software License",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
@@ -47,7 +48,7 @@ version_scheme = "release-branch-semver"
 local_scheme = "no-local-version"
 
 [tool.cibuildwheel]
-build = ["cp39-*", "cp310-*", "cp311-*"]
+build = ["cp39-*", "cp310-*", "cp311-*", "cp312-*"]
 skip = [
     "cp36-*",         # Python 3.6
     "cp37-*",         # Python 3.7
@@ -126,8 +127,8 @@ addopts = [
     "--durations=20",
     "--randomly-seed=42",
     "--randomly-dont-reorganize",
-    # "--cov=pyFlowSOM",
-    # "--cov-report=lcov",
+    "--cov=pyFlowSOM",
+    "--cov-report=lcov",
     "--pycodestyle",
 ]
 console_output_style = "count"

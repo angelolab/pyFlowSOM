@@ -24,12 +24,12 @@ jobs:
 
       - name: Set up QEMU (For Linux ARM)
         if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
 
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v2.12.3
+        uses: pypa/cibuildwheel@v2.16.2
         with:
           package-dir: .
           output-dir: wheelhouse
